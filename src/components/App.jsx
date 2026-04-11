@@ -137,7 +137,7 @@ export default function App() {
   // Minigame → inyecta mensajes en el chat usando el tiempo real del video
   const handleMinigameMessage = useCallback((msg) => {
     setInjectedMessages(prev => {
-      const withTime = { ...msg, start: currentTimeRef.current - 0.15, _injected: true };
+      const withTime = { ...msg, type: 'chat', start: currentTimeRef.current - 0.15, _injected: true };
       return [...prev, withTime];
     });
   }, []);

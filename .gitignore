@@ -25,3 +25,9 @@ pnpm-debug.log*
 
 # Ignorar videos pesados
 public/video.mp4
+
+# Remove large media files
+*.mp4
+*.mov
+*.mkv
+

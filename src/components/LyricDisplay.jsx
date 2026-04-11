@@ -60,7 +60,7 @@ export default function LyricDisplay({ lyric }) {
   const featureClass = feature ? 'lyric-wrapper--feature' : '';
 
   let animClass = '';
-  if (phase === 'enter') animClass = `anim-${animation}-enter`;
+  if (phase === 'enter' || phase === 'show' || phase === 'sticky') animClass = `anim-${animation}-enter`;
   else if (phase === 'exit') animClass = `anim-${animation}-exit`;
 
   const stickyStyle = phase === 'sticky'

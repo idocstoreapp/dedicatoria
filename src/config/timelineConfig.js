@@ -48,8 +48,8 @@ export const timeline = [
   // ══════════════════════════════════════════════════════════
   { id: "tour-blackout", start: 0, end: 15.5, type: "blackout" },
   {
-    id: "beat-tour", start: 0, end: 15.5, type: "beat",
-    color: "#ff4488", colorB: "#8800ff", bpm: 85, intensity: 0.5
+    id: "beat-tour", start: 0, end: 157.5, type: "beat",
+    color: "#2aff7cff", colorB: "#8b26e4ff", bpm: 25, intensity: 0.8
   },
 
   // Título de la sesión
@@ -73,7 +73,7 @@ export const timeline = [
   // Enfoca botón play
   {
     id: "lyric-tour-play", start: 7.5, end: 11, type: "lyric",
-    content: "un play sin volumen mínimo 🔇\nporque esto se escucha a todo",
+    content: "un boton de play/pausa para... bueno ya sabes para que sirve jjj",
     style: "minimal", animation: "fade", position: "center",
   },
   {
@@ -84,8 +84,8 @@ export const timeline = [
   // Gancho final del tour
   {
     id: "tour-robar", start: 11.5, end: 15.5, type: "lyric",
-    content: "son ~20 minutos\nque te voy a robar...",
-    style: "urban", animation: "fade", position: "center",
+    content: "espero hacerte compañia estos 20 minutos\nque te voy a robar...",
+    style: "minimal", animation: "fade", position: "center",
   },
 
   // ══════════════════════════════════════════════════════════
@@ -124,11 +124,11 @@ export const timeline = [
   // Primer mensaje del chat (alerta especial 2s antes = seg 26)
   {
     id: "chat-hola", start: 28, type: "chat", from: "j",
-    text: "Holass 👋 yo también quiero verlo..."
+    text: "Holass :v estare por aqui viendo el video jjj..."
   },
   {
     id: "chat-like-tip", start: 36, type: "chat", from: "j",
-    text: "¡dale ❤️ cuando algo te emocione! 🎶"
+    text: "dale muchos likes si te gusta mucho :3"
   },
 
   // Lyrics de Babylon Girl (aproximadas, ajusta con debugMode: true)
@@ -138,170 +138,205 @@ export const timeline = [
   {
     id: "bg-1", start: 15, end: 17, type: "lyric",
     content: "imaginate en la playa los dos",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
   {
     id: "bg-2", start: 17.2, end: 19.8, type: "lyric",
     content: "Con ninguna tendras que competir",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
   {
     id: "bg-3", start: 20, end: 21.9, type: "lyric",
     content: "repetia toa' tus notas de voz",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
   {
     id: "bg-4", start: 22, end: 25, type: "lyric",
     content: "Pero ahora mira te tengo aqui",
-    style: "urban", animation: "glow", position: "bottom-bar", feature: true,
+    style: "urban", animation: "glow", position: "center-bar", feature: true,
   },
   {
     id: "bg-5", start: 25.2, end: 29, type: "lyric",
     content: "cuando te vuelva a ver, quiero que nos parchemos en el Altoque",
-    style: "urban", animation: "glow", position: "bottom-bar", feature: true,
+    style: "urban", animation: "glow", position: "center- bar", feature: true,
   },
   {
     id: "bg-6", start: 28.6, end: 33, type: "lyric",
     content: "Que estemos tú y yo, que andemo' en otra y que nada importe",
-    style: "urban", animation: "glow", position: "bottom-bar", feature: true,
+    style: "urban", animation: "glow", position: "center-bar", feature: true,
   },
 
   {
     id: "bg-7", start: 33.5, end: 38, type: "lyric",
     content: "Y sabes que eres mía la vida es fresca como tú escote",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center  -bar",
   },
   {
     id: "bg-8", start: 38.3, end: 41.8, type: "lyric",
     content: "Nos vamos pa cali, bailamos salsa toda la noche",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
- {
-    id: "bg-9", start: 43, end: 44 t, type: "lyric",
+  {
+    id: "bg-9", start: 43, end: 44, type: "lyric",
     content: "Hay una playa solo falta tu y yo",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
- {
+  {
     id: "bg-10", start: 44.9, end: 47.6, type: "lyric",
     content: "yo soy tu visa por si quieres venir",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
- {
+  {
     id: "bg-11", start: 48.6, end: 50, type: "lyric",
     content: "tu eres una mezcla de arena con sol",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
- {
+  {
     id: "bg-12", start: 49.8, end: 51.8, type: "lyric",
     content: "La mas linda que he visto así por ahí",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
- {
-    id: "bg-12", start: 52, end: 56, type: "lyric",
+  {
+    id: "bg-12", start: 52, end: 57.6, type: "lyric",
     content: "tu eres una mezcla de arena con sol, arena con sol y BRISA",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
- {
-    id: "bg-13", start: 56.2, end: 59.8, type: "lyric",
+  {
+    id: "bg-13", start: 57.7, end: 59.8, type: "lyric",
     content: "Tu eres lo que hace falta",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
- {
+  {
     id: "bg-14", start: 60, end: 61.8, type: "lyric",
     content: "Pa una vida feliz",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
-{
-    id: "bg-marquee-1", start: 62, end: 66, type: "lyric",
+  {
+    id: "bg-marquee-1", start: 62, end: 66.5, type: "lyric",
+    content: "CUANDO PUEDA VOLVER QUISIERA LLEVARTE A LOS ROQUES",
+    style: "urban", animation: "dedication", position: "center", feature: true,
+  },
+  {
+    id: "bg-15", start: 67, end: 70.8, type: "lyric",
+    content: "Mami yo tengo un pana que nos va a cuadrar el bote",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-16", start: 71, end: 75, type: "lyric",
+    content: "Que conozcas mis mares su cielo y todos sus colores",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-17", start: 75.5, end: 80, type: "lyric",
+    content: "Quiero caerte a besos besos y bailar toda la noche",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-18", start: 81, end: 85.3, type: "lyric",
+    content: "Ay, como un demente, con mi mente la haré",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-19", start: 86, end: 89, type: "lyric",
+    content: "Tú, mi Babylon girl, tu sonrisa angelical, eso fue que me tragué",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-20", start: 90, end: 93.8, type: "lyric",
+    content: "Y como un demente, con mi mente te manifesté",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-21", start: 94, end: 98.8, type: "lyric",
+    content: "Una Cali baby girl, casi caribeña girl, doradita es su piel",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-22", start: 99.1, end: 104.8, type: "lyric",
+    content: "Ay, me tiene aniquilado, desde lejos se le veVara más, como dirá, par de besos me trae",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-23", start: 105, end: 109.6, type: "lyric",
+    content: "No es normal lo que me transmite Verle a los ojos hace que levite",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+
+  //
+  //Tu energía, mami, la tienes transparente
+  //Y yo, se siente, babe, se siente
+  //Yo te llevo cuando cambien el presidente
+  {
+    id: "bg-24", start: 110, end: 113.5, type: "lyric",
+    content: "Y yeah, y se siente, ma, se siente",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-25", start: 114, end: 115, type: "lyric",
+    content: "Tu energía, mami, la tienes transparente",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+
+  ,
+  {
+    id: "bg-26", start: 115.4, end: 118, type: "lyric",
+    content: "Y yo, se siente, babe, se siente",
+    style: "romantic", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-marquee-2", start: 118.5, end: 119.5, type: "lyric",
+    content: "Yo te llevo cuando cambien el presidente",
+    style: "urban", animation: "snake-loop", position: "center",
+  },
+  {
+    id: "bg-27", start: 120.2, end: 126, type: "lyric",
+    content: "cuando te vuelva a ver, quiero que nos parchemos en el Altoque",
+    style: "urban", animation: "glow", position: "center-bar", feature: true,
+  },
+  {
+    id: "bg-28", start: 126.1, end: 130, type: "lyric",
+    content: "Que estemos tú y yo, que andemo' en otra y que nada importe",
+    style: "urban", animation: "glow", position: "center-bar", feature: true,
+  },
+
+  {
+    id: "bg-2 9", start: 130.3, end: 135, type: "lyric",
+    content: "Y sabes que eres mía la vida es fresca como tú escote",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "bg-30", start: 135.3, end: 139.8, type: "lyric",
+    content: "Nos vamos pa cali, bailamos salsa toda la noche",
+    style: "urban", animation: "fade", position: "center-bar",
+  },
+  {
+    id: "chat-temazo", start: 139.5, type: "chat", from: "j",
+    text: "TEMAZOOOOOOO"
+  },
+  {
+    id: "bg-marquee-3", start: 140, end: 144, type: "lyric",
     content: "CUANDO PUEDA VOLVER QUISIERA LLEVARTE A LOS ROQUES",
     style: "urban", animation: "snake-loop", position: "top-bar",
   },
- {
-    id: "bg-15", start: 67, end: 70.8, type: "lyric",
+  {
+    id: "bg-31", start: 144.7, end: 148.8, type: "lyric",
     content: "Mami yo tengo un pana que nos va a cuadrar el bote",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
- {
-    id: "bg-16", start: 71, end: 75, type: "lyric",
+  {
+    id: "bg-32", start: 149, end: 153, type: "lyric",
     content: "Que conozcas mis mares su cielo y todos sus colores",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
-{
-    id: "bg-17", start: 75.5, end: 80, type: "lyric",
+  {
+    id: "bg-33", start: 153.5, end: 157.5, type: "lyric",
     content: "Quiero caerte a besos besos y bailar toda la noche",
-    style: "urban", animation: "fade", position: "bottom-bar",
-},
-{
-    id: "bg-18", start: 81, end: 85.3, type: "lyric",
-    content: "Ay, como un demente, con mi mente la haré",
-    style: "urban", animation: "fade", position: "bottom-bar",
-  },
-{
-    id: "bg-19", start: 86, end: 89, type: "lyric",
-    content: "Tú, mi Babylon girl, tu sonrisa angelical, eso fue que me tragué",
-    style: "urban", animation: "fade", position: "bottom-bar",
-  },
-{
-    id: "bg-20", start: 90, end: 93.8, type: "lyric",
-    content: "Y como un demente, con mi mente te manifesté,
-    style: "urban", animation: "fade", position: "bottom-bar",
-  },
-{
-    id: "bg-21", start: 94, end: 98.8, type: "lyric",
-    content: "Una Cali baby girl, casi caribeña girl, doradita es su piel",
-    style: "urban", animation: "fade", position: "bottom-bar",
-  },
-{
-    id: "bg-22", start: 99.1, end: 104.8, type: "lyric",
-    content: "Ay, me tiene aniquilado, desde lejos se le ve
-Vara más, como dirá, par de besos me trae",
-    style: "urban", animation: "fade", position: "bottom-bar",
-  },
-{
-    id: "bg-23", start: 81, end: 41.8, type: "lyric",
-    content:
-No es normal lo que me transmite
-Verle a los ojos hace que levite",
-    style: "urban", animation: "fade", position: "bottom-bar",
+    style: "urban", animation: "fade", position: "center-bar",
   },
 
-Y yeah, y se siente, ma, se siente
-Tu energía, mami, la tienes transparente
-Y yo, se siente, babe, se siente
-Yo te llevo cuando cambien el presidente
- {
-    id: "bg-6", start: 38.3, end: 41.8, type: "lyric",
-    content: "Nos vamos pa cali, bailamos salsa toda la noche",
-    style: "urban", animation: "fade", position: "bottom-bar",
-  },
- {
-    id: "bg-6", start: 38.3, end: 41.8, type: "lyric",
-    content: "Nos vamos pa cali, bailamos salsa toda la noche",
-    style: "urban", animation: "fade", position: "bottom-bar",
-  },
 
-  // Marquee del estribillo en top-bar
-  {
-    id: "bg-marquee-1", start: 101, end: 112, type: "lyric",
-    content: "Ay, como un demente, con mi mente la haré  •  Tú, mi Babylon girl",
-    style: "urban", animation: "snake-loop", position: "top-bar",
-  },
-  {
-    id: "bg-7", start: 112, end: 120, type: "lyric",
-    content: "me tienen aniquilado,\ndesde lejos se le ve",
-    style: "romantic", animation: "fade", position: "bottom-bar",
-  },
-  {
-    id: "bg-marquee-2", start: 130, end: 150, type: "lyric",
-    content: "Tu energía, mami, la tienes transparente  •  Yo te llevo cuando cambien el presidente",
-    style: "minimal", animation: "snake-loop", position: "top-bar",
-  },
 
   {
-    id: "bg-marquee-2", start: 130, end: 150, type: "lyric",
-    content: "Tu energía, mami, la tienes transparente  •  Yo te llevo cuando cambien el presidente",
-    style: "minimal", animation: "snake-loop", position: "top-bar",
-  },
     id: "bg-superlike", start: 150, end: 165, type: "lyric",
     content: "Quiero caerte a besos, besos\ny bailar toda la noche",
     style: "urban", animation: "aura", position: "center", feature: true,
@@ -312,7 +347,10 @@ Yo te llevo cuando cambien el presidente
   // ══════════════════════════════════════════════════════════
   //  ♪ VITAMINA  —  2:58  (178s)
   // ══════════════════════════════════════════════════════════
-
+  {
+    id: "beat-vitamina", start: 157.6, end: 178, type: "beat",
+    color: "#2aff7cff", colorB: "#8b26e4ff", bpm: 85, intensity: 0.5
+  },
   {
     id: "song-vitamina", start: t("2:58"), end: t("3:08"), type: "song-notification",
     title: "Vitamina", artist: "Dany Ocean",

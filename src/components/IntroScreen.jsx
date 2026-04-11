@@ -13,21 +13,21 @@ import React, { useState, useEffect, useRef } from 'react';
  */
 
 // Duración que cada mensaje permanece visible antes de salir (ms)
-const HOLD   = 1800;
-const FADE   = 600;   // duración CSS de la animación de fade
+const HOLD = 1800;
+const FADE = 600;   // duración CSS de la animación de fade
 
 export default function IntroScreen({ onStart }) {
   // Cada fase es un estado del "carrusel de mensajes"
   // 'typewrite' | 'msg2' | 'msg3' | 'msg4' | 'button'
-  const [phase,      setPhase]      = useState('typewrite');
-  const [typed,      setTyped]      = useState('');
+  const [phase, setPhase] = useState('typewrite');
+  const [typed, setTyped] = useState('');
   const [msgVisible, setMsgVisible] = useState(false);   // controla fade in/out
-  const [line2Vis,   setLine2Vis]   = useState(false);   // "— J." entra un poco después
-  const [showBtn,    setShowBtn]    = useState(false);
+  const [line2Vis, setLine2Vis] = useState(false);   // "— J." entra un poco después
+  const [showBtn, setShowBtn] = useState(false);
   const [btnHovered, setBtnHovered] = useState(false);
 
   const bgVideoRef = useRef(null);
-  const rootRef    = useRef(null);
+  const rootRef = useRef(null);
 
   // ── Precarga del video de fondo desde el minuto 1 ─────
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function IntroScreen({ onStart }) {
     if (!video) return;
     const go = () => {
       video.currentTime = 60;
-      video.play().catch(() => {});
+      video.play().catch(() => { });
     };
     video.addEventListener('loadedmetadata', go, { once: true });
     // Si ya estaba cargado
@@ -117,8 +117,8 @@ export default function IntroScreen({ onStart }) {
   };
 
   // ── Clases de visibilidad ─────────────────────────────
-  const vis  = msgVisible ? 'intro-msg--in'  : 'intro-msg--out';
-  const vis2 = line2Vis   ? 'intro-msg--in'  : 'intro-msg--out';
+  const vis = msgVisible ? 'intro-msg--in' : 'intro-msg--out';
+  const vis2 = line2Vis ? 'intro-msg--in' : 'intro-msg--out';
 
   return (
     <div ref={rootRef} className="intro-root">
@@ -136,14 +136,14 @@ export default function IntroScreen({ onStart }) {
       />
 
       {/* Capas decorativas */}
-      <div className="intro-veil"     aria-hidden="true" />
+      <div className="intro-veil" aria-hidden="true" />
       <div className="intro-vignette" aria-hidden="true" />
 
       {/* ── CONTENIDO CENTRAL ───────────────────────────── */}
       <div className="intro-content" aria-live="polite">
 
         {/* Badge superior sutil */}
-        <p className="intro-badge">✦ UNA EXPERIENCIA PARA TI ✦</p>
+        <p className="intro-badge">✦ 20 MINUTOS PARA HACERTE COMPAÑIA</p>
 
         {/* ── Mensajes del carrusel ───────────────────── */}
         <div className="intro-stage">
@@ -166,7 +166,7 @@ export default function IntroScreen({ onStart }) {
           {/* FASE 3 */}
           {phase === 'msg3' && (
             <p className={`intro-msg ${vis}`}>
-              hecha con mucho amor ❤️
+              hecha para ti con mucho cariño
             </p>
           )}
 
