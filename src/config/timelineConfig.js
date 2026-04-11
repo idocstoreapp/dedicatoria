@@ -156,26 +156,130 @@ export const timeline = [
     style: "urban", animation: "glow", position: "bottom-bar", feature: true,
   },
   {
-    id: "bg-4", start: 25.2, end: 28.5, type: "lyric",
+    id: "bg-5", start: 25.2, end: 29, type: "lyric",
     content: "cuando te vuelva a ver, quiero que nos parchemos en el Altoque",
     style: "urban", animation: "glow", position: "bottom-bar", feature: true,
   },
   {
-    id: "bg-4", start: 28.6, end: 33, type: "lyric",
+    id: "bg-6", start: 28.6, end: 33, type: "lyric",
     content: "Que estemos tú y yo, que andemo' en otra y que nada importe",
     style: "urban", animation: "glow", position: "bottom-bar", feature: true,
   },
 
   {
-    id: "bg-5", start: 86, end: 94, type: "lyric",
-    content: "Cuando pueda volver,\nquisiera llevarte a Los Roques",
-    style: "romantic", animation: "fade", position: "bottom-bar",
-  },
-  {
-    id: "bg-6", start: 94, end: 101, type: "lyric",
-    content: "Quiero caerte a besos, besos\ny bailar toda la noche",
+    id: "bg-7", start: 33.5, end: 38, type: "lyric",
+    content: "Y sabes que eres mía la vida es fresca como tú escote",
     style: "urban", animation: "fade", position: "bottom-bar",
   },
+  {
+    id: "bg-8", start: 38.3, end: 41.8, type: "lyric",
+    content: "Nos vamos pa cali, bailamos salsa toda la noche",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+ {
+    id: "bg-9", start: 43, end: 44 t, type: "lyric",
+    content: "Hay una playa solo falta tu y yo",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+ {
+    id: "bg-10", start: 44.9, end: 47.6, type: "lyric",
+    content: "yo soy tu visa por si quieres venir",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+ {
+    id: "bg-11", start: 48.6, end: 50, type: "lyric",
+    content: "tu eres una mezcla de arena con sol",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+ {
+    id: "bg-12", start: 49.8, end: 51.8, type: "lyric",
+    content: "La mas linda que he visto así por ahí",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+ {
+    id: "bg-12", start: 52, end: 56, type: "lyric",
+    content: "tu eres una mezcla de arena con sol, arena con sol y BRISA",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+ {
+    id: "bg-13", start: 56.2, end: 59.8, type: "lyric",
+    content: "Tu eres lo que hace falta",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+ {
+    id: "bg-14", start: 60, end: 61.8, type: "lyric",
+    content: "Pa una vida feliz",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+{
+    id: "bg-marquee-1", start: 62, end: 66, type: "lyric",
+    content: "CUANDO PUEDA VOLVER QUISIERA LLEVARTE A LOS ROQUES",
+    style: "urban", animation: "snake-loop", position: "top-bar",
+  },
+ {
+    id: "bg-15", start: 67, end: 70.8, type: "lyric",
+    content: "Mami yo tengo un pana que nos va a cuadrar el bote",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+ {
+    id: "bg-16", start: 71, end: 75, type: "lyric",
+    content: "Que conozcas mis mares su cielo y todos sus colores",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+{
+    id: "bg-17", start: 75.5, end: 80, type: "lyric",
+    content: "Quiero caerte a besos besos y bailar toda la noche",
+    style: "urban", animation: "fade", position: "bottom-bar",
+},
+{
+    id: "bg-18", start: 81, end: 85.3, type: "lyric",
+    content: "Ay, como un demente, con mi mente la haré",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+{
+    id: "bg-19", start: 86, end: 89, type: "lyric",
+    content: "Tú, mi Babylon girl, tu sonrisa angelical, eso fue que me tragué",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+{
+    id: "bg-20", start: 90, end: 93.8, type: "lyric",
+    content: "Y como un demente, con mi mente te manifesté,
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+{
+    id: "bg-21", start: 94, end: 98.8, type: "lyric",
+    content: "Una Cali baby girl, casi caribeña girl, doradita es su piel",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+{
+    id: "bg-22", start: 99.1, end: 104.8, type: "lyric",
+    content: "Ay, me tiene aniquilado, desde lejos se le ve
+Vara más, como dirá, par de besos me trae",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+{
+    id: "bg-23", start: 81, end: 41.8, type: "lyric",
+    content:
+No es normal lo que me transmite
+Verle a los ojos hace que levite",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+
+Y yeah, y se siente, ma, se siente
+Tu energía, mami, la tienes transparente
+Y yo, se siente, babe, se siente
+Yo te llevo cuando cambien el presidente
+ {
+    id: "bg-6", start: 38.3, end: 41.8, type: "lyric",
+    content: "Nos vamos pa cali, bailamos salsa toda la noche",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+ {
+    id: "bg-6", start: 38.3, end: 41.8, type: "lyric",
+    content: "Nos vamos pa cali, bailamos salsa toda la noche",
+    style: "urban", animation: "fade", position: "bottom-bar",
+  },
+
   // Marquee del estribillo en top-bar
   {
     id: "bg-marquee-1", start: 101, end: 112, type: "lyric",
@@ -192,7 +296,12 @@ export const timeline = [
     content: "Tu energía, mami, la tienes transparente  •  Yo te llevo cuando cambien el presidente",
     style: "minimal", animation: "snake-loop", position: "top-bar",
   },
+
   {
+    id: "bg-marquee-2", start: 130, end: 150, type: "lyric",
+    content: "Tu energía, mami, la tienes transparente  •  Yo te llevo cuando cambien el presidente",
+    style: "minimal", animation: "snake-loop", position: "top-bar",
+  },
     id: "bg-superlike", start: 150, end: 165, type: "lyric",
     content: "Quiero caerte a besos, besos\ny bailar toda la noche",
     style: "urban", animation: "aura", position: "center", feature: true,
