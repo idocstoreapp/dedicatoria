@@ -1,0 +1,118 @@
+/* ============================================================
+   SCENES CSS — Animaciones y efectos de escenas
+   ============================================================ */
+
+/* ─── SCENE BASE ─────────────────────────────────────────── */
+.scene-wrapper {
+  position: absolute;
+  inset: 0;
+  transition: background var(--transition-slow), opacity 0.8s ease;
+}
+
+/* ─── CANVAS DE PARTÍCULAS ───────────────────────────────── */
+.particles-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ─── STARFIELD ──────────────────────────────────────────── */
+.scene-starfield {
+  background: radial-gradient(ellipse at bottom, #0d1b2a 0%, #000000 100%);
+}
+
+.star-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle var(--duration, 3s) ease-in-out infinite var(--delay, 0s);
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: var(--opacity-min, 0.2); transform: scale(1); }
+  50% { opacity: var(--opacity-max, 1); transform: scale(1.5); }
+}
+
+/* ─── HEARTS BACKGROUND ──────────────────────────────────── */
+.scene-hearts-background {
+  background: linear-gradient(135deg, #1a0010 0%, #3d0025 50%, #1a0010 100%);
+}
+
+.heart-particle {
+  position: absolute;
+  animation: float-heart var(--duration, 6s) ease-in-out infinite var(--delay, 0s);
+  opacity: 0;
+  font-size: var(--size, 20px);
+  pointer-events: none;
+  user-select: none;
+}
+
+@keyframes float-heart {
+  0% {
+    transform: translateY(110%) rotate(var(--rot-start, -20deg)) scale(0.5);
+    opacity: 0;
+  }
+  15% { opacity: var(--opacity, 0.9); }
+  85% { opacity: var(--opacity, 0.9); }
+  100% {
+    transform: translateY(-20%) rotate(var(--rot-end, 20deg)) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ─── NEON RAIN ──────────────────────────────────────────── */
+.scene-neon-rain {
+  background: linear-gradient(180deg, #000510 0%, #001020 100%);
+}
+
+.neon-drop {
+  position: absolute;
+  top: -100px;
+  width: 2px;
+  border-radius: 1px;
+  animation: drop var(--duration, 0.8s) linear infinite var(--delay, 0s);
+  opacity: 0.7;
+}
+
+@keyframes drop {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(calc(var(--player-height, 100vh) + 100px)); }
+}
+
+/* ─── MINIMAL BLUR ───────────────────────────────────────── */
+.scene-minimal-blur {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+}
+
+.minimal-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.15;
+  animation: blob-drift var(--duration, 15s) ease-in-out infinite var(--delay, 0s) alternate;
+}
+
+@keyframes blob-drift {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(var(--drift-x, 30px), var(--drift-y, -20px)) scale(1.1); }
+}
+
+/* ─── TRANSICIÓN ENTRE ESCENAS ───────────────────────────── */
+.scene-enter {
+  animation: scene-fade-in 0.8s ease forwards;
+}
+
+.scene-exit {
+  animation: scene-fade-out 0.8s ease forwards;
+}
+
+@keyframes scene-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scene-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}

@@ -1,0 +1,74 @@
+import React, { useRef, useEffect, forwardRef } from 'react';
+import { videoConfig } from '../config/timelineConfig.js';
+
+/**
+ * VideoPlayer — Componente de video con HTML5 API
+ *
+ * Props:
+ *   src          → string (opcional, sobreescribe videoConfig.src)
+ *   onTimeUpdate (currentTime) → callback con tiempo actual
+ *   onReady      ()            → video está listo para reproducir
+ *   onError      ()            → video falló (archivo no encontrado)
+ */
+const VideoPlayer = forwardRef(function VideoPlayer(
+  { src, onTimeUpdate, onReady, onError },
+  videoRef
+) {
+  const rafRef = useRef(null);
+  const resolvedSrc = src || videoConfig.src;
+
+  useEffect(() => {
+    const video = videoRef?.current;
+    if (!video) return;
+
+    const tick = () => {
+      if (video && !video.paused && !video.ended) {
+        onTimeUpdate?.(video.currentTime);
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    const handleCanPlay = () => {
+      onReady?.();
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    const handlePlay = () => {
+      if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
+    };
+
+    const handlePause = () => onTimeUpdate?.(video.currentTime);
+
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('play', handlePlay);
+    video.addEventListener('pause', handlePause);
+    video.addEventListener('seeked', handlePause);
+
+    return () => {
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('play', handlePlay);
+      video.removeEventListener('pause', handlePause);
+      video.removeEventListener('seeked', handlePause);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [onTimeUpdate, onReady]);
+
+  return (
+    <video
+      ref={videoRef}
+      className="bg-video"
+      playsInline
+      preload="auto"
+      poster={videoConfig.poster || undefined}
+      loop={videoConfig.loop}
+      muted={videoConfig.muted}
+      aria-label="Video de fondo"
+      onError={onError}
+    >
+      <source src={resolvedSrc} type="video/mp4" />
+      Tu navegador no soporta video HTML5.
+    </video>
+  );
+});
+
+export default VideoPlayer;

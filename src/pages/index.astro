@@ -1,0 +1,38 @@
+---
+import App from '../components/App.jsx';
+import '../styles/global.css';
+import '../styles/scenes.css';
+import '../styles/lyrics.css';
+import { projectConfig } from '../config/timelineConfig.js';
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+
+    <!-- SEO -->
+    <title>{projectConfig.title} | Experiencia Audiovisual</title>
+    <meta name="description" content={`${projectConfig.title} — ${projectConfig.subtitle}. Una experiencia audiovisual interactiva sincronizada con música.`} />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={projectConfig.title} />
+    <meta property="og:description" content={projectConfig.subtitle} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- GSAP CDN — cargado antes del app para que los componentes lo usen -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" is:inline></script>
+  </head>
+
+  <body>
+    <main id="main-content">
+      <App client:only="react" />
+    </main>
+  </body>
+</html>

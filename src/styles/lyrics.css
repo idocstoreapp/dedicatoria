@@ -1,0 +1,665 @@
+/* ============================================================
+   LYRICS CSS — Estilos de texto por tipo
+   ============================================================ */
+
+/* ─── BASE LYRIC ─────────────────────────────────────────── */
+.lyric-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Empujar todo un poco arriba para no chocar con chat/botones */
+  padding: 2.5rem 2rem 160px;
+  pointer-events: none;
+}
+
+.lyric-wrapper.pos-top {
+  align-items: flex-start;
+  padding-top: 5rem;
+}
+
+.lyric-wrapper.pos-bottom {
+  align-items: flex-end;
+  padding-bottom: 160px;
+  /* sobre el chat */
+}
+
+.lyric-wrapper.pos-center {
+  align-items: center;
+}
+
+.lyric-text {
+  text-align: center;
+  max-width: 90%;
+  line-height: 1.3;
+  will-change: transform, opacity;
+}
+
+/* ─── ESTILO: ROMÁNTICO ──────────────────────────────────── */
+.lyric-romantic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(1.6rem, 6vw, 2.8rem);
+  font-weight: 400;
+  color: #fff8f0;
+  text-shadow:
+    0 0 20px rgba(255, 180, 120, 0.8),
+    0 0 40px rgba(255, 100, 100, 0.5),
+    0 0 80px rgba(255, 68, 136, 0.3);
+  letter-spacing: 0.02em;
+}
+
+/* ─── ESTILO: URBANO ─────────────────────────────────────── */
+.lyric-urban {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow:
+    3px 3px 0 rgba(136, 0, 255, 0.9),
+    -1px -1px 0 rgba(255, 68, 136, 0.5),
+    0 0 30px rgba(255, 255, 255, 0.3);
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+}
+
+.lyric-urban.pos-center {
+  font-size: clamp(2.5rem, 15vw, 4.5rem);
+}
+
+/* ─── ESTILO: GLITCH ─────────────────────────────────────── */
+.lyric-glitch {
+  font-family: var(--font-mono);
+  font-size: clamp(1.4rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  color: #00ffcc;
+  text-shadow:
+    0 0 10px rgba(0, 255, 204, 0.8),
+    0 0 20px rgba(0, 255, 204, 0.5),
+    0 0 40px rgba(0, 255, 204, 0.3);
+  letter-spacing: -0.02em;
+  animation: glitch-text 3s linear infinite;
+  position: relative;
+}
+
+.lyric-glitch::before {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  text-shadow: -1px 0 #ff00cc;
+  clip-path: polygon(0 25%, 100% 25%, 100% 35%, 0 35%);
+  animation: glitch-clip1 4s infinite;
+  color: #ff00cc;
+  opacity: 0.8;
+}
+
+.lyric-glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  left: -2px;
+  text-shadow: 1px 0 #00ffcc;
+  clip-path: polygon(0 65%, 100% 65%, 100% 75%, 0 75%);
+  animation: glitch-clip2 3.5s infinite;
+  color: #8800ff;
+  opacity: 0.7;
+}
+
+@keyframes glitch-text {
+
+  0%,
+  90%,
+  100% {
+    transform: translate(0);
+  }
+
+  91% {
+    transform: translate(-2px, 1px);
+  }
+
+  93% {
+    transform: translate(2px, -1px);
+  }
+
+  95% {
+    transform: translate(-1px, 2px);
+  }
+}
+
+@keyframes glitch-clip1 {
+
+  0%,
+  95%,
+  100% {
+    clip-path: polygon(0 25%, 100% 25%, 100% 35%, 0 35%);
+  }
+
+  96% {
+    clip-path: polygon(0 15%, 100% 15%, 100% 45%, 0 45%);
+  }
+
+  98% {
+    clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%);
+  }
+}
+
+@keyframes glitch-clip2 {
+
+  0%,
+  93%,
+  100% {
+    clip-path: polygon(0 65%, 100% 65%, 100% 75%, 0 75%);
+  }
+
+  94% {
+    clip-path: polygon(0 5%, 100% 5%, 100% 20%, 0 20%);
+  }
+
+  96% {
+    clip-path: polygon(0 50%, 100% 50%, 100% 65%, 0 65%);
+  }
+}
+
+/* ─── ESTILO: MINIMAL ────────────────────────────────────── */
+.lyric-minimal {
+  font-family: var(--font-sans);
+  font-size: clamp(1rem, 4vw, 1.8rem);
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: none;
+}
+
+/* ─── ANIMACIONES DE ENTRADA ─────────────────────────────── */
+
+/* FADE */
+.anim-fade-enter {
+  animation: lyric-fade-in 0.6s ease forwards;
+}
+
+.anim-fade-exit {
+  animation: lyric-fade-out 0.5s ease forwards;
+}
+
+@keyframes lyric-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes lyric-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* ZOOM */
+.anim-zoom-enter {
+  animation: lyric-zoom-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.anim-zoom-exit {
+  animation: lyric-zoom-out 0.4s ease-in forwards;
+}
+
+@keyframes lyric-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes lyric-zoom-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+/* SLIDE (desde abajo) */
+.anim-slide-enter {
+  animation: lyric-slide-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.anim-slide-exit {
+  animation: lyric-slide-out 0.4s ease-in forwards;
+}
+
+@keyframes lyric-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lyric-slide-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
+
+/* BOUNCE */
+.anim-bounce-enter {
+  animation: lyric-bounce-in 0.6s cubic-bezier(0.36, 1.6, 0.4, 0.9) forwards;
+}
+
+@keyframes lyric-bounce-in {
+  from {
+    opacity: 0;
+    transform: scale(0.3) translateY(60px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ─── OVERLAYS ───────────────────────────────────────────── */
+.overlay-item {
+  position: absolute;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+/* Posiciones */
+.overlay-top-right {
+  top: 16%;
+  right: 8%;
+}
+
+.overlay-top-left {
+  top: 16%;
+  left: 8%;
+}
+
+.overlay-bottom-right {
+  bottom: 18%;
+  right: 8%;
+}
+
+.overlay-bottom-left {
+  bottom: 18%;
+  left: 8%;
+}
+
+.overlay-center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Tamaños */
+.overlay-small {
+  width: 60px;
+  height: 60px;
+}
+
+.overlay-medium {
+  width: 100px;
+  height: 100px;
+}
+
+.overlay-large {
+  width: 160px;
+  height: 160px;
+}
+
+.overlay-small img,
+.overlay-medium img,
+.overlay-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Animación de entrada de overlay */
+@keyframes overlay-pop {
+  0% {
+    transform: scale(0) rotate(-15deg);
+    opacity: 0;
+  }
+
+  70% {
+    transform: scale(1.15) rotate(5deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.overlay-item.visible {
+  animation: overlay-pop 0.5s cubic-bezier(0.36, 1.6, 0.4, 0.9) forwards;
+}
+
+/* Asegura que el overlay-center preserve su transform */
+.overlay-center.visible {
+  animation: overlay-pop-center 0.5s cubic-bezier(0.36, 1.6, 0.4, 0.9) forwards;
+}
+
+@keyframes overlay-pop-center {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(-15deg);
+    opacity: 0;
+  }
+
+  70% {
+    transform: translate(-50%, -50%) scale(1.15) rotate(5deg);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   NUEVAS ANIMACIONES DE LYRICS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+/* ─── THEATER — letras aparecen de izquierda a derecha como anuncio ─ */
+.anim-theater-enter {
+  animation: theater-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  letter-spacing: 0.15em !important;
+}
+
+@keyframes theater-in {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.3) translateY(20px);
+    filter: blur(6px);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scaleX(1.04) translateY(-4px);
+    filter: blur(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleX(1) translateY(0);
+  }
+}
+
+/* ─── SNAKE / MARQUEE — texto que pasa de derecha a izquierda ───── */
+.anim-snake-enter {
+  animation: snake-marquee 8s linear forwards;
+  white-space: nowrap;
+  overflow: visible;
+  max-width: none !important;
+  width: max-content;
+}
+
+@keyframes snake-marquee {
+  0% {
+    transform: translateX(110vw);
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-120vw);
+    opacity: 0;
+  }
+}
+
+/* ─── RAINBOW — texto con gradiente arcoíris animado ───────────── */
+.anim-rainbow-enter {
+  animation: lyric-zoom-in 0.5s ease forwards;
+  background: linear-gradient(90deg,
+      #ff4488, #ff8800, #ffdd00, #44ff88, #00aaff, #8800ff, #ff44cc);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow-flow 2.5s linear infinite, lyric-zoom-in 0.5s ease forwards;
+}
+
+@keyframes rainbow-flow {
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* ─── GLOW — texto con brillo pulsante ──────────────────────────── */
+.anim-glow-enter {
+  animation: lyric-fade-in 0.6s ease forwards, glow-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    text-shadow: 0 0 20px rgba(255, 68, 136, 0.6), 0 0 40px rgba(255, 68, 136, 0.3);
+  }
+
+  50% {
+    text-shadow: 0 0 40px rgba(255, 68, 136, 1), 0 0 80px rgba(136, 0, 255, 0.6);
+  }
+}
+
+/* ?????????????????????????????????????????????????????????
+   TOP-BAR / BOTTOM-BAR � Franjas para lyrics fuera del centro
+   Ideal para marquee (snake-loop) y lyrics fijas que no
+   interfieren con el contenido central del video.
+????????????????????????????????????????????????????????? */
+.lyric-wrapper.pos-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  align-items: center;
+  padding: 0 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255, 68, 136, 0.18);
+  overflow: hidden;
+  z-index: 70;
+}
+
+.lyric-wrapper.pos-bottom-bar {
+  position: absolute;
+  bottom: 40px;
+  /* sobre la progress bar */
+  left: 0;
+  right: 0;
+  height: 52px;
+  align-items: center;
+  padding: 0 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid rgba(136, 0, 255, 0.18);
+  overflow: hidden;
+  z-index: 70;
+}
+
+/* El texto dentro de las barras no tiene max-width ni padding lateral */
+.lyric-wrapper.pos-top-bar .lyric-text,
+.lyric-wrapper.pos-bottom-bar .lyric-text {
+  max-width: none;
+  white-space: nowrap;
+  margin: 0;
+  font-size: clamp(0.75rem, 2.5vw, 1rem);
+}
+
+/* ?????????????????????????????????????????????????????????
+   SNAKE-LOOP � Marquee continuo sin fin (entra derecha, sale izquierda)
+????????????????????????????????????????????????????????? */
+.anim-snake-loop-enter {
+  animation: snake-loop 10s linear infinite;
+  white-space: nowrap;
+  overflow: visible;
+  width: max-content;
+}
+
+@keyframes snake-loop {
+  0% {
+    transform: translateX(105vw);
+  }
+
+  100% {
+    transform: translateX(-105%);
+  }
+}
+
+/* ?????????????????????????????????????????????????????????
+   AURA � Multi-capa de halos coloridos pulsantes
+????????????????????????????????????????????????????????? */
+.anim-aura-enter {
+  animation: lyric-zoom-in 0.5s ease forwards, aura-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes aura-pulse {
+
+  0%,
+  100% {
+    text-shadow:
+      0 0 15px rgba(255, 68, 136, 0.8),
+      0 0 35px rgba(255, 68, 136, 0.5),
+      0 0 60px rgba(136, 0, 255, 0.4),
+      0 0 90px rgba(0, 170, 255, 0.25);
+  }
+
+  33% {
+    text-shadow:
+      0 0 20px rgba(255, 136, 0, 0.9),
+      0 0 45px rgba(255, 68, 136, 0.6),
+      0 0 75px rgba(136, 0, 255, 0.5),
+      0 0 110px rgba(0, 255, 136, 0.2);
+  }
+
+  66% {
+    text-shadow:
+      0 0 18px rgba(0, 170, 255, 0.9),
+      0 0 40px rgba(136, 0, 255, 0.7),
+      0 0 70px rgba(255, 68, 136, 0.4),
+      0 0 100px rgba(255, 220, 0, 0.2);
+  }
+}
+
+/* ?????????????????????????????????????????????????????????
+   ARC � SVG textPath curvo
+????????????????????????????????????????????????????????? */
+.lyric-wrapper--arc {
+  overflow: visible;
+}
+
+.lyric-arc-svg {
+  width: min(80vw, 380px);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 12px rgba(255, 100, 136, 0.6));
+}
+
+.anim-arc-enter {
+  animation: lyric-fade-in 0.8s ease forwards;
+}
+
+.lyric-arc-text {
+  fill: #fff8f0;
+  font-size: 1.5rem;
+  font-family: var(--font-serif, Georgia, serif);
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+
+/* Estilos para el texto del arco seg�n style de lyric */
+.lyric-arc-text.lyric-urban {
+  fill: #ffffff;
+  font-family: var(--font-display, sans-serif);
+  font-style: normal;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.lyric-arc-text.lyric-minimal {
+  fill: rgba(255, 255, 255, 0.8);
+  font-family: var(--font-sans, sans-serif);
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ?????????????????????????????????????????????????????????
+   THEATER � letras de Broadway con luces
+????????????????????????????????????????????????????????? */
+.anim-theater-enter {
+  animation: theater-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    theater-lights 1.5s ease-in-out infinite 0.7s;
+  letter-spacing: 0.18em !important;
+}
+
+@keyframes theater-in {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.2) translateY(16px);
+    filter: blur(8px) brightness(0.5);
+  }
+
+  60% {
+    opacity: 1;
+    transform: scaleX(1.03) translateY(-3px);
+    filter: blur(0) brightness(1.3);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scaleX(1) translateY(0);
+    filter: blur(0) brightness(1);
+  }
+}
+
+@keyframes theater-lights {
+
+  0%,
+  100% {
+    text-shadow: 0 0 20px #fff, 0 0 40px rgba(255, 220, 0, 0.6), 0 0 80px rgba(255, 68, 136, 0.3);
+  }
+
+  50% {
+    text-shadow: 0 0 30px #fff, 0 0 60px rgba(255, 220, 0, 0.9), 0 0 120px rgba(255, 138, 0, 0.5);
+  }
+}

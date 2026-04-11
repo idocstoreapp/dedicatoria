@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <filter id="heartGlow">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <!-- Gradiente del corazón -->
+    <radialGradient id="heartFill" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#ff88cc"/>
+      <stop offset="100%" stop-color="#cc0044"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Sombra exterior animada -->
+  <ellipse cx="50" cy="90" rx="30" ry="6" fill="rgba(255,68,136,0.3)">
+    <animate attributeName="rx" values="30;25;30" dur="1.2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.3;0.1;0.3" dur="1.2s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- Corazón principal -->
+  <path
+    d="M50,80 L18,50 C8,40 8,22 20,16 C30,10 44,16 50,28 C56,16 70,10 80,16 C92,22 92,40 82,50 Z"
+    fill="url(#heartFill)"
+    filter="url(#heartGlow)"
+  >
+    <animateTransform
+      attributeName="transform"
+      type="scale"
+      values="1;1.08;1;0.96;1"
+      dur="1.2s"
+      repeatCount="indefinite"
+      additive="sum"
+      transformOrigin="50 50"
+    />
+  </path>
+
+  <!-- Brillo interior -->
+  <ellipse cx="38" cy="38" rx="8" ry="5" fill="rgba(255,255,255,0.35)" transform="rotate(-30, 38, 38)">
+    <animate attributeName="opacity" values="0.35;0.6;0.35" dur="1.2s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- Destellos -->
+  <circle cx="72" cy="22" r="3" fill="#ffccee">
+    <animate attributeName="opacity" values="0;1;0" dur="1.5s" begin="0.3s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="1;3;1" dur="1.5s" begin="0.3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="30" cy="18" r="2" fill="#ffaadd">
+    <animate attributeName="opacity" values="0;1;0" dur="1.8s" begin="0.8s" repeatCount="indefinite"/>
+  </circle>
+</svg>
