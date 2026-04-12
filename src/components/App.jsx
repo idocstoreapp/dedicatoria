@@ -154,17 +154,14 @@ export default function App() {
     setView('player');
   }, []);
 
-  // Reproducir video al montar el player (viene de la intro)
-  useEffect(() => {
-    if (view !== 'player' || !hasStarted) return;
+  const handleInitialGesture = useCallback(() => {
     const video = videoRef.current;
-    if (!video) return;
-    video.currentTime = 0;
-    video.play()
-      .then(() => setIsPlaying(true))
-      .catch(console.error);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view]);
+    if (video) {
+        video.muted = false;
+        video.currentTime = 0;
+        video.play().then(() => setIsPlaying(true)).catch(console.error);
+    }
+  }, []);
 
   // ─── BONUS → BIBLIOTECA ──────────────────────────────────
   const handleBonusFinished = useCallback(() => setView('library'), []);
@@ -218,30 +215,7 @@ export default function App() {
     : videoConfig.src;
 
   // ══════════════════════════════════════════════════════════
-  //  INTRO VIEW — con VideoPlayer OCULTO de fondo para precarga
-  // ══════════════════════════════════════════════════════════
-  if (view === 'intro') {
-    return (
-      <div className="app-root">
-        <div ref={containerRef} className="player-container" id="player-container">
-          {/* Video precargando silenciosamente */}
-          <div className="layer-video layer-video--preload" aria-hidden="true">
-            <VideoPlayer
-              ref={videoRef}
-              src={currentVideoSrc}
-              onReady={handleVideoReady}
-              onTimeUpdate={() => {}}
-              onError={() => setVideoError(true)}
-            />
-          </div>
-          <IntroScreen onStart={handleIntroStart} />
-        </div>
-      </div>
-    );
-  }
-
-  // ══════════════════════════════════════════════════════════
-  //  PLAYER / TRACK VIEW
+  //  APP VIEW ROUTING
   // ══════════════════════════════════════════════════════════
   return (
     <div className="app-root">
@@ -251,15 +225,22 @@ export default function App() {
         <BeatZones beatEvent={activeBeat} />
 
         {/* ── CAPA 1: VIDEO ────────────────────────────── */}
-        <div className="layer-video">
+        <div className={`layer-video ${view === 'intro' && !hasStarted ? 'layer-video--preload' : ''}`}>
           <VideoPlayer
             ref={videoRef}
             src={currentVideoSrc}
+            autoPlay={view === 'intro'}
+            muted={view === 'intro' || videoConfig.muted}
             onTimeUpdate={handleTimeUpdate}
             onReady={handleVideoReady}
             onError={() => setVideoError(true)}
           />
         </div>
+
+        {/* ── CAPA INTRO (SOBRE EL VIDEO DIRECTAMENTE) ───── */}
+        {view === 'intro' && (
+          <IntroScreen onStart={handleIntroStart} onInitialGesture={handleInitialGesture} />
+        )}
 
         {/* ── CAPA 2: ESCENAS ──────────────────────────── */}
         <div className="layer-scene">

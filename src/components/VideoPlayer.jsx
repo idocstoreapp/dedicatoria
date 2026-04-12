@@ -11,7 +11,7 @@ import { videoConfig } from '../config/timelineConfig.js';
  *   onError      ()            → video falló (archivo no encontrado)
  */
 const VideoPlayer = forwardRef(function VideoPlayer(
-  { src, onTimeUpdate, onReady, onError },
+  { src, onTimeUpdate, onReady, onError, autoPlay, muted },
   videoRef
 ) {
   const rafRef = useRef(null);
@@ -56,18 +56,17 @@ const VideoPlayer = forwardRef(function VideoPlayer(
   return (
     <video
       ref={videoRef}
+      src={resolvedSrc}
       className="bg-video"
       playsInline
       preload="auto"
+      autoPlay={autoPlay}
       poster={videoConfig.poster || undefined}
       loop={videoConfig.loop}
-      muted={videoConfig.muted}
+      muted={muted ?? videoConfig.muted}
       aria-label="Video de fondo"
       onError={onError}
-    >
-      <source src={resolvedSrc} type="video/mp4" />
-      Tu navegador no soporta video HTML5.
-    </video>
+    />
   );
 });
 

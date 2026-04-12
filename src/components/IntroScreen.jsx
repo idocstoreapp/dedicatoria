@@ -16,7 +16,7 @@ import React, { useState, useEffect, useRef } from 'react';
 const HOLD = 1800;
 const FADE = 600;   // duración CSS de la animación de fade
 
-export default function IntroScreen({ onStart }) {
+export default function IntroScreen({ onStart, onInitialGesture }) {
   // Cada fase es un estado del "carrusel de mensajes"
   // 'typewrite' | 'msg2' | 'msg3' | 'msg4' | 'button'
   const [phase, setPhase] = useState('typewrite');
@@ -25,22 +25,9 @@ export default function IntroScreen({ onStart }) {
   const [line2Vis, setLine2Vis] = useState(false);   // "— J." entra un poco después
   const [showBtn, setShowBtn] = useState(false);
   const [btnHovered, setBtnHovered] = useState(false);
-
-  const bgVideoRef = useRef(null);
   const rootRef = useRef(null);
 
-  // ── Precarga del video de fondo desde el minuto 1 ─────
-  useEffect(() => {
-    const video = bgVideoRef.current;
-    if (!video) return;
-    const go = () => {
-      video.currentTime = 60;
-      video.play().catch(() => { });
-    };
-    video.addEventListener('loadedmetadata', go, { once: true });
-    // Si ya estaba cargado
-    if (video.readyState >= 1) go();
-  }, []);
+
 
   // ── Secuencia de fases ─────────────────────────────────
   useEffect(() => {
@@ -107,6 +94,7 @@ export default function IntroScreen({ onStart }) {
 
   // ── Click en INICIAR ──────────────────────────────────
   const handleStart = () => {
+    onInitialGesture?.(); // Sync browser bypass immediately on click interaction
     if (rootRef.current && window.gsap) {
       window.gsap.to(rootRef.current, {
         opacity: 0, duration: 0.8, ease: 'power2.in', onComplete: onStart,
@@ -123,17 +111,7 @@ export default function IntroScreen({ onStart }) {
   return (
     <div ref={rootRef} className="intro-root">
 
-      {/* Video borroso de fondo */}
-      <video
-        ref={bgVideoRef}
-        className="intro-bg-video"
-        src="/video.mp4"
-        muted
-        playsInline
-        loop
-        preload="auto"
-        aria-hidden="true"
-      />
+
 
       {/* Capas decorativas */}
       <div className="intro-veil" aria-hidden="true" />

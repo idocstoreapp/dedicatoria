@@ -860,8 +860,8 @@ export const chatConfig = {
 //  VIDEO CONFIG
 // ═══════════════════════════════════════════════════════════
 export const videoConfig = {
-  src: "/video.mp4",
-  poster: "/poster.jpg",
+  src: "https://pub-89bdd442dec64f17a50199b18b596e11.r2.dev/video.mp4?v=2",
+
 };
 
 // ═══════════════════════════════════════════════════════════

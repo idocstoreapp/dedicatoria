@@ -865,7 +865,7 @@ body {
 .intro-root {
   position: absolute;
   inset: 0;
-  background: #000;
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1602,10 +1602,14 @@ body {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .layer-video--preload {
   position: absolute;
-  inset: 0;
-  opacity: 0;
+  inset: -10%;
+  width: 120%;
+  height: 120%;
+  opacity: 0.5;
+  filter: blur(20px);
   pointer-events: none;
   z-index: -1;
+  transition: opacity 1s, filter 1s;
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
