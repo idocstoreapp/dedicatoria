@@ -861,9 +861,7 @@ export const chatConfig = {
 // ═══════════════════════════════════════════════════════════
 export const videoConfig = {
   src: "https://pub-89bdd442dec64f17a50199b18b596e11.r2.dev/video.mp4?v=2",
-  // Para maximizar arranque instantáneo al dar "INICIAR", mantener en 0
-  // para que la intro precargue exactamente el inicio real del video.
-  introPreviewStart: 0,
+  introPreviewStart: 60, // segundo 60 (minuto 1) durante la intro
 };
 
 // ═══════════════════════════════════════════════════════════

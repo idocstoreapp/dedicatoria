@@ -64,6 +64,7 @@ const VideoPlayer = forwardRef(function VideoPlayer(
       className="bg-video"
       playsInline
       preload="auto"
+      crossOrigin="anonymous"
       autoPlay={autoPlay}
       poster={videoConfig.poster || undefined}
       loop={videoConfig.loop}

@@ -198,8 +198,7 @@ export default function App() {
     const video = videoRef.current;
     if (!video) return;
 
-    const previewStart = Number(videoConfig.introPreviewStart ?? 0);
-    if (!(previewStart > 0)) return;
+    const previewStart = Number(videoConfig.introPreviewStart ?? 60);
     const seekIntroPreview = () => {
       if (introPreviewSeekedRef.current) return;
       if (!Number.isFinite(video.duration) || video.duration <= previewStart) return;

@@ -34,9 +34,9 @@ try {
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    {videoOrigin && <link rel="preconnect" href={videoOrigin} />}
+    {videoOrigin && <link rel="preconnect" href={videoOrigin} crossorigin="anonymous" />}
     {videoOrigin && <link rel="dns-prefetch" href={videoOrigin} />}
-    {videoPreloadUrl && <link rel="preload" as="video" href={videoPreloadUrl} />}
+    {videoPreloadUrl && <link rel="preload" as="video" href={videoPreloadUrl} crossorigin="anonymous" />}
 
     <!-- GSAP CDN — cargado antes del app para que los componentes lo usen -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" is:inline></script>
