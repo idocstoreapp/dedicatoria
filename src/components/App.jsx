@@ -156,37 +156,45 @@ export default function App() {
   // El video ya fue precargado en el fondo durante la intro.
   // Solo debemos llamar play() — el video ya está en el DOM.
   const handleIntroStart = useCallback(() => {
+    const video = videoRef.current;
+
     setHasStarted(true);
     setView('player');
-  }, []);
 
-  const handleInitialGesture = useCallback(() => {
-    const video = videoRef.current;
     if (!video) return;
-
-    // Al salir de la intro reiniciamos el video principal desde el segundo 0
-    // y forzamos un intento robusto de reproducción para evitar bloqueos.
     video.currentTime = 0;
 
-    const playWithFallback = async () => {
-      try {
-        video.muted = false;
-        await video.play();
-        setIsPlaying(true);
-      } catch {
-        try {
-          video.muted = true;
-          await video.play();
-          video.muted = false;
-          setIsPlaying(true);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    };
-
-    playWithFallback();
+    // Intento robusto dentro del gesto de usuario real.
+    video.play()
+      .then(() => setIsPlaying(true))
+      .catch(() => {
+        video.muted = true;
+        video.play()
+          .then(() => {
+            video.muted = false;
+            setIsPlaying(true);
+          })
+          .catch(console.error);
+      });
   }, []);
+
+  // Warm-up del inicio del archivo durante la intro para reducir latencia
+  // cuando la usuaria pulse INICIAR.
+  useEffect(() => {
+    if (view !== 'intro') return;
+    if (!currentVideoSrc) return;
+
+    const controller = new AbortController();
+
+    fetch(currentVideoSrc, {
+      headers: { Range: 'bytes=0-1800000' },
+      signal: controller.signal,
+    }).catch(() => {
+      // Silencioso: si el navegador/CDN ignora Range, el <video> mantiene preload.
+    });
+
+    return () => controller.abort();
+  }, [view, currentVideoSrc]);
 
   // Durante la intro, usar el fondo desde el minuto 1 (si el video lo permite).
   useEffect(() => {

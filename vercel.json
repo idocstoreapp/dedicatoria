@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/video.mp4",
+      "destination": "https://pub-89bdd442dec64f17a50199b18b596e11.r2.dev/video.mp4"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/video.mp4",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}

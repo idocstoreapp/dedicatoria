@@ -5,12 +5,15 @@ import '../styles/scenes.css';
 import '../styles/lyrics.css';
 import { projectConfig, videoConfig } from '../config/timelineConfig.js';
 
-const videoPreloadUrl = videoConfig?.src;
+const videoPreloadUrl = videoConfig?.src || '/video.mp4';
+const isExternalVideo = /^https?:\/\//i.test(videoPreloadUrl);
 let videoOrigin = '';
-try {
-  videoOrigin = new URL(videoPreloadUrl).origin;
-} catch {
-  videoOrigin = '';
+if (isExternalVideo) {
+  try {
+    videoOrigin = new URL(videoPreloadUrl).origin;
+  } catch {
+    videoOrigin = '';
+  }
 }
 ---
 
@@ -36,7 +39,7 @@ try {
 
     {videoOrigin && <link rel="preconnect" href={videoOrigin} crossorigin="anonymous" />}
     {videoOrigin && <link rel="dns-prefetch" href={videoOrigin} />}
-    {videoPreloadUrl && <link rel="preload" as="video" href={videoPreloadUrl} crossorigin="anonymous" />}
+    {videoPreloadUrl && <link rel="prefetch" href={videoPreloadUrl} />}
 
     <!-- GSAP CDN — cargado antes del app para que los componentes lo usen -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" is:inline></script>
