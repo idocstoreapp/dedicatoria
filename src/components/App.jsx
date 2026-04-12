@@ -156,6 +156,8 @@ export default function App() {
   // El video ya fue precargado en el fondo durante la intro.
   // Solo debemos llamar play() — el video ya está en el DOM.
   const handleIntroStart = useCallback(() => {
+    const video = videoRef.current;
+
     setHasStarted(true);
     setView('player');
 
@@ -168,6 +170,24 @@ export default function App() {
       video.play().then(() => setIsPlaying(true)).catch(console.error);
     });
   }, []);
+
+  // Warm-up del inicio del archivo durante la intro para reducir latencia
+  // cuando la usuaria pulse INICIAR.
+  useEffect(() => {
+    if (view !== 'intro') return;
+    if (!currentVideoSrc) return;
+
+    const controller = new AbortController();
+
+    fetch(currentVideoSrc, {
+      headers: { Range: 'bytes=0-1800000' },
+      signal: controller.signal,
+    }).catch(() => {
+      // Silencioso: si el navegador/CDN ignora Range, el <video> mantiene preload.
+    });
+
+    return () => controller.abort();
+  }, [view, currentVideoSrc]);
 
   // Warm-up del inicio del archivo durante la intro para reducir latencia
   // cuando la usuaria pulse INICIAR.

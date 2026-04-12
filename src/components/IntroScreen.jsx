@@ -94,13 +94,7 @@ export default function IntroScreen({ onStart }) {
 
   // ── Click en INICIAR ──────────────────────────────────
   const handleStart = () => {
-    if (rootRef.current && window.gsap) {
-      window.gsap.to(rootRef.current, {
-        opacity: 0, duration: 0.8, ease: 'power2.in', onComplete: onStart,
-      });
-    } else {
-      onStart?.();
-    }
+    onStart?.();
   };
 
   // ── Clases de visibilidad ─────────────────────────────
