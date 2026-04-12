@@ -158,35 +158,34 @@ export default function App() {
   const handleIntroStart = useCallback(() => {
     setHasStarted(true);
     setView('player');
+
+    // Usar el gesto real del botón INICIAR para garantizar play inmediato
+    // y evitar que el navegador difiera la reproducción.
+    requestAnimationFrame(() => {
+      const video = videoRef.current;
+      if (!video) return;
+      video.currentTime = 0;
+      video.play().then(() => setIsPlaying(true)).catch(console.error);
+    });
   }, []);
 
-  const handleInitialGesture = useCallback(() => {
-    const video = videoRef.current;
-    if (!video) return;
+  // Warm-up del inicio del archivo durante la intro para reducir latencia
+  // cuando la usuaria pulse INICIAR.
+  useEffect(() => {
+    if (view !== 'intro') return;
+    if (!currentVideoSrc) return;
 
-    // Al salir de la intro reiniciamos el video principal desde el segundo 0
-    // y forzamos un intento robusto de reproducción para evitar bloqueos.
-    video.currentTime = 0;
+    const controller = new AbortController();
 
-    const playWithFallback = async () => {
-      try {
-        video.muted = false;
-        await video.play();
-        setIsPlaying(true);
-      } catch {
-        try {
-          video.muted = true;
-          await video.play();
-          video.muted = false;
-          setIsPlaying(true);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    };
+    fetch(currentVideoSrc, {
+      headers: { Range: 'bytes=0-1800000' },
+      signal: controller.signal,
+    }).catch(() => {
+      // Silencioso: si el navegador/CDN ignora Range, el <video> mantiene preload.
+    });
 
-    playWithFallback();
-  }, []);
+    return () => controller.abort();
+  }, [view, currentVideoSrc]);
 
   // Durante la intro, usar el fondo desde el minuto 1 (si el video lo permite).
   useEffect(() => {
