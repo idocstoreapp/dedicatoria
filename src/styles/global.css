@@ -873,16 +873,6 @@ body {
   z-index: 200;
 }
 
-.intro-bg-video {
-  position: absolute;
-  inset: -10%;
-  width: 120%;
-  height: 120%;
-  object-fit: cover;
-  filter: blur(15px) brightness(0.35) saturate(1.4);
-  pointer-events: none;
-}
-
 .intro-veil {
   position: absolute;
   inset: 0;
@@ -1598,14 +1588,11 @@ body {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   VIDEO PRELOAD LAYER — invisible durante la intro
+   VIDEO EN INTRO — mismo video principal, difuminado al fondo
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-.layer-video--preload {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  z-index: -1;
+.layer-video--intro .bg-video {
+  transform: scale(1.12);
+  filter: blur(15px) brightness(0.35) saturate(1.4);
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

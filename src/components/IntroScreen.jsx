@@ -26,21 +26,7 @@ export default function IntroScreen({ onStart }) {
   const [showBtn, setShowBtn] = useState(false);
   const [btnHovered, setBtnHovered] = useState(false);
 
-  const bgVideoRef = useRef(null);
   const rootRef = useRef(null);
-
-  // ── Precarga del video de fondo desde el minuto 1 ─────
-  useEffect(() => {
-    const video = bgVideoRef.current;
-    if (!video) return;
-    const go = () => {
-      video.currentTime = 60;
-      video.play().catch(() => { });
-    };
-    video.addEventListener('loadedmetadata', go, { once: true });
-    // Si ya estaba cargado
-    if (video.readyState >= 1) go();
-  }, []);
 
   // ── Secuencia de fases ─────────────────────────────────
   useEffect(() => {
@@ -122,19 +108,6 @@ export default function IntroScreen({ onStart }) {
 
   return (
     <div ref={rootRef} className="intro-root">
-
-      {/* Video borroso de fondo */}
-      <video
-        ref={bgVideoRef}
-        className="intro-bg-video"
-        src="/video.mp4"
-        muted
-        playsInline
-        loop
-        preload="auto"
-        aria-hidden="true"
-      />
-
       {/* Capas decorativas */}
       <div className="intro-veil" aria-hidden="true" />
       <div className="intro-vignette" aria-hidden="true" />
