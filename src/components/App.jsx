@@ -36,6 +36,7 @@ export default function App() {
   // ─── REFS ────────────────────────────────────────────────
   const videoRef     = useRef(null);
   const containerRef = useRef(null);
+  const introPreviewSeekedRef = useRef(false);
 
   // ─── ESTADO REPRODUCTOR ──────────────────────────────────
   const [isPlaying,   setIsPlaying]   = useState(false);
@@ -44,6 +45,11 @@ export default function App() {
   const [videoReady,  setVideoReady]  = useState(false);
   const [videoError,  setVideoError]  = useState(false);
   const [hasStarted,  setHasStarted]  = useState(false);
+
+  // ─── VIDEO SRC ───────────────────────────────────────────
+  const currentVideoSrc = view === 'track' && selectedTrack
+    ? selectedTrack.src
+    : videoConfig.src;
 
   // ─── ESTADO TIMELINE ─────────────────────────────────────
   const [activeScene,       setActiveScene]       = useState(null);
@@ -156,12 +162,58 @@ export default function App() {
 
   const handleInitialGesture = useCallback(() => {
     const video = videoRef.current;
-    if (video) {
+    if (!video) return;
+
+    // Al salir de la intro reiniciamos el video principal desde el segundo 0
+    // y forzamos un intento robusto de reproducción para evitar bloqueos.
+    video.currentTime = 0;
+
+    const playWithFallback = async () => {
+      try {
         video.muted = false;
-        video.currentTime = 0;
-        video.play().then(() => setIsPlaying(true)).catch(console.error);
-    }
+        await video.play();
+        setIsPlaying(true);
+      } catch {
+        try {
+          video.muted = true;
+          await video.play();
+          video.muted = false;
+          setIsPlaying(true);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+
+    playWithFallback();
   }, []);
+
+  // Durante la intro, usar el fondo desde el minuto 1 (si el video lo permite).
+  useEffect(() => {
+    if (view !== 'intro') {
+      introPreviewSeekedRef.current = false;
+      return;
+    }
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    const previewStart = Number(videoConfig.introPreviewStart ?? 60);
+    const seekIntroPreview = () => {
+      if (introPreviewSeekedRef.current) return;
+      if (!Number.isFinite(video.duration) || video.duration <= previewStart) return;
+      try {
+        video.currentTime = previewStart;
+        introPreviewSeekedRef.current = true;
+      } catch (err) {
+        console.warn('No se pudo mover el preview de intro:', err);
+      }
+    };
+
+    if (video.readyState >= 1) seekIntroPreview();
+    video.addEventListener('loadedmetadata', seekIntroPreview);
+    return () => video.removeEventListener('loadedmetadata', seekIntroPreview);
+  }, [view, currentVideoSrc]);
 
   // ─── BONUS → BIBLIOTECA ──────────────────────────────────
   const handleBonusFinished = useCallback(() => setView('library'), []);
@@ -208,11 +260,6 @@ export default function App() {
       </div>
     );
   }
-
-  // ─── VIDEO SRC ───────────────────────────────────────────
-  const currentVideoSrc = view === 'track' && selectedTrack
-    ? selectedTrack.src
-    : videoConfig.src;
 
   // ══════════════════════════════════════════════════════════
   //  APP VIEW ROUTING
@@ -291,7 +338,7 @@ export default function App() {
 
         {/* ── CAPA 6: UI ───────────────────────────────── */}
         <div className="layer-ui">
-          {!videoError && (
+          {!videoError && view !== 'intro' && (
             <PlayButton
               isPlaying={isPlaying}
               hasStarted={hasStarted}

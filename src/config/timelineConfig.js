@@ -861,7 +861,7 @@ export const chatConfig = {
 // ═══════════════════════════════════════════════════════════
 export const videoConfig = {
   src: "https://pub-89bdd442dec64f17a50199b18b596e11.r2.dev/video.mp4?v=2",
-
+  introPreviewStart: 60, // segundo 60 (minuto 1) durante la intro
 };
 
 // ═══════════════════════════════════════════════════════════
