@@ -3,7 +3,15 @@ import App from '../components/App.jsx';
 import '../styles/global.css';
 import '../styles/scenes.css';
 import '../styles/lyrics.css';
-import { projectConfig } from '../config/timelineConfig.js';
+import { projectConfig, videoConfig } from '../config/timelineConfig.js';
+
+const videoPreloadUrl = videoConfig?.src;
+let videoOrigin = '';
+try {
+  videoOrigin = new URL(videoPreloadUrl).origin;
+} catch {
+  videoOrigin = '';
+}
 ---
 
 <!DOCTYPE html>
@@ -25,6 +33,10 @@ import { projectConfig } from '../config/timelineConfig.js';
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    {videoOrigin && <link rel="preconnect" href={videoOrigin} />}
+    {videoOrigin && <link rel="dns-prefetch" href={videoOrigin} />}
+    {videoPreloadUrl && <link rel="preload" as="video" href={videoPreloadUrl} />}
 
     <!-- GSAP CDN — cargado antes del app para que los componentes lo usen -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" is:inline></script>

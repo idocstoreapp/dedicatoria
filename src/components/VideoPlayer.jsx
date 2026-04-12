@@ -21,6 +21,10 @@ const VideoPlayer = forwardRef(function VideoPlayer(
     const video = videoRef?.current;
     if (!video) return;
 
+    // Forzar inicio de descarga tan pronto como se monte el elemento.
+    // Especialmente útil en Safari/iOS donde preload puede ser más conservador.
+    video.load();
+
     const tick = () => {
       if (video && !video.paused && !video.ended) {
         onTimeUpdate?.(video.currentTime);
