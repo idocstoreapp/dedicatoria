@@ -16,7 +16,7 @@ import React, { useState, useEffect, useRef } from 'react';
 const HOLD = 1800;
 const FADE = 600;   // duración CSS de la animación de fade
 
-export default function IntroScreen({ onStart, onInitialGesture }) {
+export default function IntroScreen({ onStart }) {
   // Cada fase es un estado del "carrusel de mensajes"
   // 'typewrite' | 'msg2' | 'msg3' | 'msg4' | 'button'
   const [phase, setPhase] = useState('typewrite');
@@ -94,7 +94,6 @@ export default function IntroScreen({ onStart, onInitialGesture }) {
 
   // ── Click en INICIAR ──────────────────────────────────
   const handleStart = () => {
-    onInitialGesture?.(); // Sync browser bypass immediately on click interaction
     if (rootRef.current && window.gsap) {
       window.gsap.to(rootRef.current, {
         opacity: 0, duration: 0.8, ease: 'power2.in', onComplete: onStart,

@@ -45,6 +45,11 @@ export default function App() {
   const [videoError,  setVideoError]  = useState(false);
   const [hasStarted,  setHasStarted]  = useState(false);
 
+  // ─── VIDEO SRC ───────────────────────────────────────────
+  const currentVideoSrc = view === 'track' && selectedTrack
+    ? selectedTrack.src
+    : videoConfig.src;
+
   // ─── ESTADO TIMELINE ─────────────────────────────────────
   const [activeScene,       setActiveScene]       = useState(null);
   const [activeLyric,       setActiveLyric]       = useState(null);
@@ -152,15 +157,19 @@ export default function App() {
   const handleIntroStart = useCallback(() => {
     setHasStarted(true);
     setView('player');
-  }, []);
-
-  const handleInitialGesture = useCallback(() => {
-    const video = videoRef.current;
-    if (video) {
-        video.muted = false;
-        video.currentTime = 0;
-        video.play().then(() => setIsPlaying(true)).catch(console.error);
-    }
+    requestAnimationFrame(() => {
+      const video = videoRef.current;
+      if (!video) return;
+      video.currentTime = 0;
+      video.muted = false;
+      video.play()
+        .then(() => setIsPlaying(true))
+        .catch((err) => {
+          console.error(err);
+          video.muted = true;
+          video.play().then(() => setIsPlaying(true)).catch(console.error);
+        });
+    });
   }, []);
 
   // ─── BONUS → BIBLIOTECA ──────────────────────────────────
@@ -209,11 +218,6 @@ export default function App() {
     );
   }
 
-  // ─── VIDEO SRC ───────────────────────────────────────────
-  const currentVideoSrc = view === 'track' && selectedTrack
-    ? selectedTrack.src
-    : videoConfig.src;
-
   // ══════════════════════════════════════════════════════════
   //  APP VIEW ROUTING
   // ══════════════════════════════════════════════════════════
@@ -239,7 +243,7 @@ export default function App() {
 
         {/* ── CAPA INTRO (SOBRE EL VIDEO DIRECTAMENTE) ───── */}
         {view === 'intro' && (
-          <IntroScreen onStart={handleIntroStart} onInitialGesture={handleInitialGesture} />
+          <IntroScreen onStart={handleIntroStart} />
         )}
 
         {/* ── CAPA 2: ESCENAS ──────────────────────────── */}
@@ -291,7 +295,7 @@ export default function App() {
 
         {/* ── CAPA 6: UI ───────────────────────────────── */}
         <div className="layer-ui">
-          {!videoError && (
+          {!videoError && view !== 'intro' && (
             <PlayButton
               isPlaying={isPlaying}
               hasStarted={hasStarted}
