@@ -286,7 +286,7 @@ export default function App() {
 
         {/* ── CAPA INTRO (SOBRE EL VIDEO DIRECTAMENTE) ───── */}
         {view === 'intro' && (
-          <IntroScreen onStart={handleIntroStart} onInitialGesture={handleInitialGesture} />
+          <IntroScreen onStart={handleIntroStart} />
         )}
 
         {/* ── CAPA 2: ESCENAS ──────────────────────────── */}
