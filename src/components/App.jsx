@@ -154,7 +154,30 @@ export default function App() {
     setView('player');
   }, []);
 
-  // Reproducir video al montar el player (viene de la intro)
+  // Intro: intenta mostrar preview del video desde el minuto 1.
+  useEffect(() => {
+    if (view !== 'intro') return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    const startIntroPreview = () => {
+      const go = () => {
+        try {
+          video.currentTime = 60;
+        } catch (_) {
+          // Algunos proveedores no permiten seek temprano sin buffer suficiente.
+        }
+        video.play().catch(() => {});
+      };
+
+      if (video.readyState >= 1) go();
+      else video.addEventListener('loadedmetadata', go, { once: true });
+    };
+
+    startIntroPreview();
+  }, [view]);
+
+  // Reproducir video al entrar al player (viene de la intro)
   useEffect(() => {
     if (view !== 'player' || !hasStarted) return;
     const video = videoRef.current;
@@ -217,32 +240,6 @@ export default function App() {
     ? selectedTrack.src
     : videoConfig.src;
 
-  // ══════════════════════════════════════════════════════════
-  //  INTRO VIEW — con VideoPlayer OCULTO de fondo para precarga
-  // ══════════════════════════════════════════════════════════
-  if (view === 'intro') {
-    return (
-      <div className="app-root">
-        <div ref={containerRef} className="player-container" id="player-container">
-          {/* Video precargando silenciosamente */}
-          <div className="layer-video layer-video--preload" aria-hidden="true">
-            <VideoPlayer
-              ref={videoRef}
-              src={currentVideoSrc}
-              onReady={handleVideoReady}
-              onTimeUpdate={() => {}}
-              onError={() => setVideoError(true)}
-            />
-          </div>
-          <IntroScreen onStart={handleIntroStart} />
-        </div>
-      </div>
-    );
-  }
-
-  // ══════════════════════════════════════════════════════════
-  //  PLAYER / TRACK VIEW
-  // ══════════════════════════════════════════════════════════
   return (
     <div className="app-root">
       <div ref={containerRef} className="player-container" id="player-container">
@@ -251,66 +248,76 @@ export default function App() {
         <BeatZones beatEvent={activeBeat} />
 
         {/* ── CAPA 1: VIDEO ────────────────────────────── */}
-        <div className="layer-video">
+        <div className={`layer-video ${view === 'intro' ? 'layer-video--intro' : ''}`}>
           <VideoPlayer
             ref={videoRef}
             src={currentVideoSrc}
-            onTimeUpdate={handleTimeUpdate}
+            onTimeUpdate={view === 'intro' ? () => {} : handleTimeUpdate}
             onReady={handleVideoReady}
             onError={() => setVideoError(true)}
           />
         </div>
 
         {/* ── CAPA 2: ESCENAS ──────────────────────────── */}
-        <div className="layer-scene">
-          <SceneManager
-            activeScene={videoError ? (activeScene || 'starfield') : activeScene}
-            hasVideo={!videoError}
-          />
-        </div>
+        {view !== 'intro' && (
+          <div className="layer-scene">
+            <SceneManager
+              activeScene={videoError ? (activeScene || 'starfield') : activeScene}
+              hasVideo={!videoError}
+            />
+          </div>
+        )}
 
         {/* ── CAPA 2b: BLACKOUT ────────────────────────── */}
-        <BlackoutLayer isActive={isBlackout} />
+        {view !== 'intro' && <BlackoutLayer isActive={isBlackout} />}
 
         {/* ── CAPA 3: OVERLAYS ─────────────────────────── */}
-        <div className="layer-overlay">
-          <OverlayEffects
-            overlays={activeOverlays}
-            activeEffect={activeEffect}
-            onEffectDone={() => setActiveEffect(null)}
-            containerRef={containerRef}
-          />
-        </div>
+        {view !== 'intro' && (
+          <div className="layer-overlay">
+            <OverlayEffects
+              overlays={activeOverlays}
+              activeEffect={activeEffect}
+              onEffectDone={() => setActiveEffect(null)}
+              containerRef={containerRef}
+            />
+          </div>
+        )}
 
         {/* ── CAPA 4: LETRAS ───────────────────────────── */}
-        <div className="layer-lyrics">
-          <LyricDisplay lyric={activeLyric} />
-        </div>
+        {view !== 'intro' && (
+          <div className="layer-lyrics">
+            <LyricDisplay lyric={activeLyric} />
+          </div>
+        )}
 
         {/* ── CAPA 4b: INTERACCIONES ───────────────────── */}
-        <div className="layer-interactions">
-          <InteractionOverlay
-            interaction={activeInteraction}
-            onAnswer={(answer, interaction) => {
-              console.log('Respuesta:', answer, interaction.id);
-            }}
-          />
-        </div>
+        {view !== 'intro' && (
+          <div className="layer-interactions">
+            <InteractionOverlay
+              interaction={activeInteraction}
+              onAnswer={(answer, interaction) => {
+                console.log('Respuesta:', answer, interaction.id);
+              }}
+            />
+          </div>
+        )}
 
         {/* ── CAPA 5: CHAT SIMULADO ─────────────────────── */}
-        <SimulatedChat
-          chatEvents={chatEvents}
-          currentTime={currentTime}
-          senderConfig={chatConfig?.sender}
-          recipientConfig={chatConfig?.recipient}
-          visible={hasStarted}
-          activeMiniGame={activeMiniGame}
-          onMinigameMessage={handleMinigameMessage}
-        />
+        {view !== 'intro' && (
+          <SimulatedChat
+            chatEvents={chatEvents}
+            currentTime={currentTime}
+            senderConfig={chatConfig?.sender}
+            recipientConfig={chatConfig?.recipient}
+            visible={hasStarted}
+            activeMiniGame={activeMiniGame}
+            onMinigameMessage={handleMinigameMessage}
+          />
+        )}
 
         {/* ── CAPA 6: UI ───────────────────────────────── */}
         <div className="layer-ui">
-          {!videoError && (
+          {view !== 'intro' && !videoError && (
             <PlayButton
               isPlaying={isPlaying}
               hasStarted={hasStarted}
@@ -318,7 +325,7 @@ export default function App() {
             />
           )}
 
-          {videoReady && !videoError && (
+          {view !== 'intro' && videoReady && !videoError && (
             <ProgressBar
               currentTime={currentTime}
               duration={duration}
@@ -327,7 +334,7 @@ export default function App() {
           )}
 
           {/* Like button */}
-          {isPlaying && (
+          {view !== 'intro' && isPlaying && (
             <LikeButton
               onLike={handleLike}
               isSuperlike={isSuperlike}
@@ -346,7 +353,7 @@ export default function App() {
           )}
 
           {/* Resumen de likes al pausar */}
-          {!isPlaying && likeCount > 0 && currentTime > 5 && (
+          {view !== 'intro' && !isPlaying && likeCount > 0 && currentTime > 5 && (
             <div className="like-summary">
               ❤️ Le diste <strong>{likeCount}</strong> likes a esta canción. ¡A mí también me gusta!
             </div>
@@ -354,7 +361,7 @@ export default function App() {
         </div>
 
         {/* ── NOTIFICACIÓN DE CANCIÓN ─────────────────────── */}
-        <SongNotification notification={activeSongNotif} />
+        {view !== 'intro' && <SongNotification notification={activeSongNotif} />}
 
         {/* Sin video */}
         {videoError && (
@@ -365,26 +372,28 @@ export default function App() {
         )}
 
         {/* ── TOUR SPOTLIGHT ───────────────────────────── */}
-        <TourSpotlight tourEvent={activeTour} containerRef={containerRef} />
+        {view !== 'intro' && <TourSpotlight tourEvent={activeTour} containerRef={containerRef} />}
 
         {/* ── MOTOR TIMELINE ───────────────────────────── */}
-        <TimelineEngine
-          currentTime={currentTime}
-          onSceneChange={handleSceneChange}
-          onLyricChange={handleLyricChange}
-          onOverlay={handleOverlay}
-          onEffect={handleEffect}
-          onBlackout={handleBlackout}
-          onInteraction={handleInteraction}
-          onBeat={handleBeat}
-          onSuperlike={handleSuperlike}
-          onTour={handleTour}
-          onSongNotification={handleSongNotif}
-          onMinigame={handleMinigame}
-        />
+        {view !== 'intro' && (
+          <TimelineEngine
+            currentTime={currentTime}
+            onSceneChange={handleSceneChange}
+            onLyricChange={handleLyricChange}
+            onOverlay={handleOverlay}
+            onEffect={handleEffect}
+            onBlackout={handleBlackout}
+            onInteraction={handleInteraction}
+            onBeat={handleBeat}
+            onSuperlike={handleSuperlike}
+            onTour={handleTour}
+            onSongNotification={handleSongNotif}
+            onMinigame={handleMinigame}
+          />
+        )}
 
         {/* ── DEBUG ────────────────────────────────────── */}
-        {projectConfig.debugMode && (
+        {view !== 'intro' && projectConfig.debugMode && (
           <DebugPanel
             currentTime={currentTime}
             activeScene={activeScene}
@@ -392,6 +401,8 @@ export default function App() {
             overlays={activeOverlays}
           />
         )}
+
+        {view === 'intro' && <IntroScreen onStart={handleIntroStart} />}
       </div>
 
       {/* Formulario de mensaje (modal fuera del player) */}
