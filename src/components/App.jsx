@@ -161,22 +161,33 @@ export default function App() {
     setHasStarted(true);
     setView('player');
 
-    if (!video) return;
-    video.currentTime = 0;
-
-    // Intento robusto dentro del gesto de usuario real.
-    video.play()
-      .then(() => setIsPlaying(true))
-      .catch(() => {
-        video.muted = true;
-        video.play()
-          .then(() => {
-            video.muted = false;
-            setIsPlaying(true);
-          })
-          .catch(console.error);
-      });
+    // Usar el gesto real del botón INICIAR para garantizar play inmediato
+    // y evitar que el navegador difiera la reproducción.
+    requestAnimationFrame(() => {
+      const video = videoRef.current;
+      if (!video) return;
+      video.currentTime = 0;
+      video.play().then(() => setIsPlaying(true)).catch(console.error);
+    });
   }, []);
+
+  // Warm-up del inicio del archivo durante la intro para reducir latencia
+  // cuando la usuaria pulse INICIAR.
+  useEffect(() => {
+    if (view !== 'intro') return;
+    if (!currentVideoSrc) return;
+
+    const controller = new AbortController();
+
+    fetch(currentVideoSrc, {
+      headers: { Range: 'bytes=0-1800000' },
+      signal: controller.signal,
+    }).catch(() => {
+      // Silencioso: si el navegador/CDN ignora Range, el <video> mantiene preload.
+    });
+
+    return () => controller.abort();
+  }, [view, currentVideoSrc]);
 
   // Warm-up del inicio del archivo durante la intro para reducir latencia
   // cuando la usuaria pulse INICIAR.
