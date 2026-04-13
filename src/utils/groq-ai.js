@@ -7,13 +7,13 @@
  * 100% gratis, sin tarjeta de crédito, sin activar nada.
  * Solo crear la key en https://console.groq.com/keys
  *
- * La API key se carga desde la variable de entorno VITE_GROQ_API_KEY
+ * La API key se carga desde la variable de entorno PUBLIC_GROQ_API_KEY
  */
 
 // ========================================
 // API key desde variable de entorno
 // ========================================
-const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
+const GROQ_API_KEY = import.meta.env.PUBLIC_GROQ_API_KEY || '';
 // ========================================
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
