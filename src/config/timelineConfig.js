@@ -860,7 +860,7 @@ export const chatConfig = {
 //  VIDEO CONFIG
 // ═══════════════════════════════════════════════════════════
 export const videoConfig = {
-  src: "https://pub-89bdd442dec64f17a50199b18b596e11.r2.dev/video.mp4?v=3",
+  src: "https://pub-89bdd442dec64f17a50199b18b596e11.r2.dev/Video.mp4",
   introPreviewStart: 0, // mantener en 0 para priorizar arranque inmediato al pulsar Iniciar
 };
 
