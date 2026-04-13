@@ -57,12 +57,28 @@ export default function LikeButton({ onLike, isSuperlike = false }) {
         title={count > 0 ? `${count} likes ❤️` : 'Dale like'}
       >
         <span className="like-heart" aria-hidden="true">
-          {isSuperlike ? '🌈' : '❤️'}
+          {isSuperlike ? '💖' : '❤️'}
         </span>
         {count > 0 && (
           <span className="like-count">{count}</span>
         )}
       </button>
+
+      {/* ── SPOTLIGHT ARTIFICIAL ── */}
+      {isSuperlike && (
+        <div className="superlike-spotlight">
+          <div className="tour-aura" />
+          <div className="tour-ring tour-ring--gradient tour-ring--1" />
+          <div className="tour-ring tour-ring--gradient tour-ring--2" />
+        </div>
+      )}
+
+      {/* ── ALERTA GLOBAL EPIC MOMENT ── */}
+      {isSuperlike && (
+        <div className="superlike-epic-alert">
+          <div className="superlike-epic-text">MOMENTO EPICO<br/>SUPERLIKEEE</div>
+        </div>
+      )}
     </div>
   );
 }
@@ -81,7 +97,7 @@ function FloatingHeart({ heart }) {
         color             : heart.color,
       }}
     >
-      {heart.rainbow ? '✨' : '❤️'}
+      {heart.rainbow ? '💖' : '❤️'}
     </div>
   );
 }

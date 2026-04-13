@@ -374,10 +374,10 @@ export const timeline = [
   {
     id: "bg-superlike", start: 150, end: 165, type: "lyric",
     content: "Quiero caerte a besos, besos\ny bailar toda la noche",
-    style: "urban", animation: "aura", position: "center", feature: true,
+    style: "urban", animation: "aura", position: "top", feature: true,
   },
-  { id: "superlike-bg", start: 150, end: 165, type: "superlike" },
-  { id: "effect-bg-1", start: 150, type: "effect", effect: "flash" },
+  { id: "superlike-bg", start: 140, end: 155, type: "superlike" },
+  { id: "effect-bg-1", start: 140, type: "effect", effect: "flash" },
 
   // ══════════════════════════════════════════════════════════
   //  ♪ VITAMINA  —  2:58  (178s)

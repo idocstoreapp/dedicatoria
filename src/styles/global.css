@@ -4,6 +4,7 @@
 
 /* ─── GOOGLE FONTS ────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
 
 /* ─── VARIABLES GLOBALES ─────────────────────────────────── */
 :root {
@@ -3448,3 +3449,80 @@ body {
   right: 0;
   z-index: 1;
 }
+
+/* ----------------------------------------------------------
+   SUPERLIKE EPIC ALERTS
+   ---------------------------------------------------------- */
+.superlike-spotlight {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 50% !important;
+}
+
+.superlike-spotlight * {
+  border-radius: 50% !important;
+}
+
+.superlike-epic-alert {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 30vh; /* Subir el texto para sortear la interfaz del chat */
+  pointer-events: none;
+  z-index: 9999; /* Por encima de todo */
+}
+
+.superlike-epic-text {
+  font-family: 'Titan One', 'Fredoka One', 'Varela Round', 'Arial Rounded MT Bold', 'Nunito', 'Comic Sans MS', system-ui, sans-serif;
+  font-size: 3rem;
+  font-weight: normal; /* Titan One is naturally thick */
+  text-align: center;
+  line-height: 1.1;
+  background: linear-gradient(90deg, #ff4488, #ffdd00, #44ff88, #00aaff, #8800ff, #ff4488);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  -webkit-text-stroke: 3px #e0e5ec; /* Borde plateado vibrante */
+  filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+  animation: 
+    tour-text-shimmer 2s linear infinite,
+    superlike-epic-pop 5.5s ease-in-out forwards;
+}
+
+@keyframes superlike-epic-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  4%   { transform: scale(1.2); opacity: 1; }
+  8%   { transform: scale(1); opacity: 1; }
+
+  /* Blinking/Flashing phase (Arcade vibe) */
+  15%  { opacity: 0.2; transform: scale(0.95); }
+  22%  { opacity: 1;   transform: scale(1.1); }
+  29%  { opacity: 0.2; transform: scale(0.95); }
+  36%  { opacity: 1;   transform: scale(1.1); }
+  43%  { opacity: 0.2; transform: scale(0.95); }
+  50%  { opacity: 1;   transform: scale(1.1); }
+  57%  { opacity: 0.2; transform: scale(0.95); }
+  64%  { opacity: 1;   transform: scale(1.1); }
+  71%  { opacity: 0.2; transform: scale(0.95); }
+  78%  { opacity: 1;   transform: scale(1.1); }
+  85%  { opacity: 1;   transform: scale(1); }
+
+  93%  { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+
+@media (min-width: 768px) {
+  .superlike-epic-text { font-size: 5rem; }
+  .superlike-spotlight { transform: translate(-50%, -50%) scale(1.5); }
+}
+
