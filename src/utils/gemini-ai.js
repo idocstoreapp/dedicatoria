@@ -7,9 +7,11 @@
  * en TODAS las situaciones, incluso las impredecibles.
  *
  * Sin SDK — llama directo a la API REST con fetch.
+ *
+ * La API key se carga desde la variable de entorno VITE_GEMINI_API_KEY
  */
 
-const GEMINI_API_KEY = 'AIzaSyB0wfSHl67oaWA_-eepx_HNsDud4tovkmw';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 // ════════════════════════════════════════════════════════════
