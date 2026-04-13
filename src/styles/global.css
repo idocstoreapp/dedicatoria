@@ -936,7 +936,7 @@ body {
   color: rgba(255, 255, 255, 0.9);
   line-height: 1.6;
   text-align: center;
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  transition: opacity 1.4s ease;
 }
 
 /* Versión grande para el saludo inicial */
@@ -962,28 +962,20 @@ body {
   gap: 0.6rem;
 }
 
-/* Estados fade in / fade out */
+/* Estados fade in / fade out — solo opacidad, sin movimiento */
 .intro-msg--in {
   opacity: 1;
-  transform: translateY(0);
+  animation: intro-msg-in 1.4s ease forwards;
 }
 
 .intro-msg--out {
   opacity: 0;
-  transform: translateY(-8px);
   pointer-events: none;
 }
 
 @keyframes intro-msg-in {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 
@@ -1212,7 +1204,7 @@ body {
   font-size: 0.73rem;
   color: rgba(255, 255, 255, 0.85);
   white-space: nowrap;
-  animation: intro-msg-in 0.5s ease forwards;
+  animation: intro-msg-in 1.3s ease forwards;
   z-index: var(--z-ui);
 }
 

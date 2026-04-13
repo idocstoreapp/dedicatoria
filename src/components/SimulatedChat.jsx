@@ -45,6 +45,14 @@ export default function SimulatedChat({
   const [typingState,     setTypingState]     = useState('none'); // 'none'|'first-alert'|'typing'
   const [showReactionTip, setShowReactionTip] = useState(false);
 
+  // Callback directo para inyectar mensajes del minijuego sin filtro de tiempo
+  const addDirectMessage = useCallback((msg) => {
+    setMessages(prev => {
+      if (prev.some(m => m.id === msg.id)) return prev; // dedup
+      return [...prev, { ...msg, type: 'chat' }];
+    });
+  }, []);
+
   const addedRef         = useRef(new Set());
   const bottomRef        = useRef(null);
   const pressTimerRef    = useRef(null);
@@ -288,7 +296,7 @@ export default function SimulatedChat({
         {/* ── MINIJUEGO INYECTADO AQUÍ ── */}
         <ChatMiniGame
           game={activeMiniGame}
-          onMessage={onMinigameMessage}
+          onMessage={addDirectMessage}
         />
 
         <div ref={bottomRef} />

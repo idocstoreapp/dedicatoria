@@ -13,7 +13,7 @@ import React, { useState, useEffect, useRef } from 'react';
  */
 
 // Duración que cada mensaje permanece visible antes de salir (ms)
-const HOLD = 1800;
+const HOLD = 2500;
 const FADE = 600;   // duración CSS de la animación de fade
 
 export default function IntroScreen({ onStart }) {
@@ -26,6 +26,19 @@ export default function IntroScreen({ onStart }) {
   const [showBtn, setShowBtn] = useState(false);
   const [btnHovered, setBtnHovered] = useState(false);
   const rootRef = useRef(null);
+  const bgVideoRef = useRef(null);
+
+  // ── Video de fondo silenciado – buscar al minuto 1 cuando cargue metadatos ──
+  useEffect(() => {
+    const v = bgVideoRef.current;
+    if (!v) return;
+    const seek = () => {
+      try { v.currentTime = 60; } catch (_) { }
+      v.play().catch(() => { });
+    };
+    if (v.readyState >= 1) { seek(); }
+    else { v.addEventListener('loadedmetadata', seek, { once: true }); }
+  }, []);
 
 
 
@@ -33,7 +46,7 @@ export default function IntroScreen({ onStart }) {
   useEffect(() => {
     // ── FASE 1: Máquina de escribir "Hola chica linda..." ─
     if (phase === 'typewrite') {
-      const text = 'Hola chica linda...';
+      const text = 'Hola...';
       let i = 0;
       setTyped('');
 
@@ -55,9 +68,9 @@ export default function IntroScreen({ onStart }) {
       return () => clearInterval(interval);
     }
 
-    // ── FASE 2: "Esto es una experiencia interactiva" ─────
+    // ── FASE 2 ───────────────────────────────────────────────────────
     if (phase === 'msg2') {
-      setMsgVisible(true);
+      requestAnimationFrame(() => requestAnimationFrame(() => setMsgVisible(true)));
       setTimeout(() => {
         setMsgVisible(false);
         setTimeout(() => setPhase('msg3'), FADE);
@@ -73,8 +86,17 @@ export default function IntroScreen({ onStart }) {
       }, HOLD);
     }
 
-    // ── FASE 4: "Espero que…" + "— J." juntos ────────────
+    // ── FASE 4: "hecha con mucho amor ❤️" ─────────────────
     if (phase === 'msg4') {
+      setMsgVisible(true);
+      setTimeout(() => {
+        setMsgVisible(false);
+        setTimeout(() => setPhase('msg5'), FADE);
+      }, HOLD);
+    }
+
+    // ── FASE 5: "Espero que…" + "— J." juntos ────────────
+    if (phase === 'msg5') {
       setMsgVisible(true);
       // "— J." aparece 900ms después
       setTimeout(() => setLine2Vis(true), 900);
@@ -86,7 +108,7 @@ export default function IntroScreen({ onStart }) {
       }, HOLD + 1200);
     }
 
-    // ── FASE 5: Botón INICIAR ─────────────────────────────
+    // ── FASE 6: Botón INICIAR ─────────────────────────────
     if (phase === 'button') {
       setTimeout(() => setShowBtn(true), 300);
     }
@@ -106,6 +128,18 @@ export default function IntroScreen({ onStart }) {
 
 
 
+      {/* ── Video borroso de fondo ───────────────────────── */}
+      <video
+        ref={bgVideoRef}
+        className="intro-bg-video"
+        src="https://pub-89bdd442dec64f17a50199b18b596e11.r2.dev/Video.mp4"
+        muted
+        playsInline
+        loop
+        preload="metadata"
+        aria-hidden="true"
+      />
+
       {/* Capas decorativas */}
       <div className="intro-veil" aria-hidden="true" />
       <div className="intro-vignette" aria-hidden="true" />
@@ -114,7 +148,7 @@ export default function IntroScreen({ onStart }) {
       <div className="intro-content" aria-live="polite">
 
         {/* Badge superior sutil */}
-        <p className="intro-badge">✦ 20 MINUTOS PARA HACERTE COMPAÑIA</p>
+        <p className="intro-badge">✦ DANY OCEAN - CASAPARLANTE</p>
 
         {/* ── Mensajes del carrusel ───────────────────── */}
         <div className="intro-stage">
@@ -130,22 +164,29 @@ export default function IntroScreen({ onStart }) {
           {/* FASE 2 */}
           {phase === 'msg2' && (
             <p className={`intro-msg ${vis}`}>
-              Esto es una experiencia interactiva
+              Espero que te guste la musica del caribe...
             </p>
           )}
 
           {/* FASE 3 */}
           {phase === 'msg3' && (
             <p className={`intro-msg ${vis}`}>
-              hecha para ti con mucho cariño
+              este video tiene 6 canciones
             </p>
           )}
 
-          {/* FASE 4 — Dos líneas */}
+          {/* FASE 4 */}
           {phase === 'msg4' && (
+            <p className={`intro-msg ${vis}`}>
+              como es un poco largo <br />tienes un par de botones para jugar
+            </p>
+          )}
+
+          {/* FASE 5 — Dos líneas */}
+          {phase === 'msg5' && (
             <div className="intro-duo">
               <p className={`intro-msg ${vis}`}>
-                Espero que te guste la música del Caribe.
+                tambien algo de compañia
               </p>
               <p className={`intro-msg intro-msg--signature ${vis2}`}>
                 — J.
@@ -153,7 +194,7 @@ export default function IntroScreen({ onStart }) {
             </div>
           )}
 
-          {/* FASE 5 — Botón */}
+          {/* FASE 6 — Botón */}
           {phase === 'button' && showBtn && (
             <button
               className={`intro-start-btn ${btnHovered ? 'hovered' : ''}`}

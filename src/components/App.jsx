@@ -254,33 +254,39 @@ export default function App() {
           />
         </div>
 
-        {/* ── CAPA 2b: BLACKOUT ────────────────────────── */}
-        <BlackoutLayer isActive={isBlackout} />
+        {/* ── CAPA 2b: BLACKOUT ──────────────── */}
+        {hasStarted && <BlackoutLayer isActive={isBlackout} />}
 
-        {/* ── CAPA 3: OVERLAYS ─────────────────────────── */}
-        <div className="layer-overlay">
-          <OverlayEffects
-            overlays={activeOverlays}
-            activeEffect={activeEffect}
-            onEffectDone={() => setActiveEffect(null)}
-            containerRef={containerRef}
-          />
-        </div>
+        {/* ── CAPA 3: OVERLAYS ───────────────── */}
+        {hasStarted && (
+          <div className="layer-overlay">
+            <OverlayEffects
+              overlays={activeOverlays}
+              activeEffect={activeEffect}
+              onEffectDone={() => setActiveEffect(null)}
+              containerRef={containerRef}
+            />
+          </div>
+        )}
 
-        {/* ── CAPA 4: LETRAS ───────────────────────────── */}
-        <div className="layer-lyrics">
-          <LyricDisplay lyric={activeLyric} />
-        </div>
+        {/* ── CAPA 4: LETRAS — solo cuando empieza la experiencia ── */}
+        {hasStarted && (
+          <div className="layer-lyrics">
+            <LyricDisplay lyric={activeLyric} />
+          </div>
+        )}
 
-        {/* ── CAPA 4b: INTERACCIONES ───────────────────── */}
-        <div className="layer-interactions">
-          <InteractionOverlay
-            interaction={activeInteraction}
-            onAnswer={(answer, interaction) => {
-              console.log('Respuesta:', answer, interaction.id);
-            }}
-          />
-        </div>
+        {/* ── CAPA 4b: INTERACCIONES ─────────────── */}
+        {hasStarted && (
+          <div className="layer-interactions">
+            <InteractionOverlay
+              interaction={activeInteraction}
+              onAnswer={(answer, interaction) => {
+                console.log('Respuesta:', answer, interaction.id);
+              }}
+            />
+          </div>
+        )}
 
         {/* ── CAPA 5: CHAT SIMULADO ─────────────────────── */}
         <SimulatedChat
@@ -352,21 +358,23 @@ export default function App() {
         {/* ── TOUR SPOTLIGHT ───────────────────────────── */}
         <TourSpotlight tourEvent={activeTour} containerRef={containerRef} />
 
-        {/* ── MOTOR TIMELINE ───────────────────────────── */}
-        <TimelineEngine
-          currentTime={currentTime}
-          onSceneChange={handleSceneChange}
-          onLyricChange={handleLyricChange}
-          onOverlay={handleOverlay}
-          onEffect={handleEffect}
-          onBlackout={handleBlackout}
-          onInteraction={handleInteraction}
-          onBeat={handleBeat}
-          onSuperlike={handleSuperlike}
-          onTour={handleTour}
-          onSongNotification={handleSongNotif}
-          onMinigame={handleMinigame}
-        />
+        {/* ── MOTOR TIMELINE — solo cuando la experiencia comenzó ── */}
+        {hasStarted && (
+          <TimelineEngine
+            currentTime={currentTime}
+            onSceneChange={handleSceneChange}
+            onLyricChange={handleLyricChange}
+            onOverlay={handleOverlay}
+            onEffect={handleEffect}
+            onBlackout={handleBlackout}
+            onInteraction={handleInteraction}
+            onBeat={handleBeat}
+            onSuperlike={handleSuperlike}
+            onTour={handleTour}
+            onSongNotification={handleSongNotif}
+            onMinigame={handleMinigame}
+          />
+        )}
 
         {/* ── DEBUG ────────────────────────────────────── */}
         {projectConfig.debugMode && (
