@@ -17,8 +17,12 @@ import MessageForm from './MessageForm.jsx';
 import BeatZones from './BeatZones.jsx';
 import SimulatedChat from './SimulatedChat.jsx';
 import TourSpotlight from './TourSpotlight.jsx';
+import TourMascot from './TourMascot.jsx';
+import TourBackground from './TourBackground.jsx';
 import SongNotification from './SongNotification.jsx';
 import ChatMiniGame from './ChatMiniGame.jsx';
+import ChatNotification from './ChatNotification.jsx';
+import MinigameScene from './MinigameScene.jsx';
 import {
   projectConfig,
   videoConfig,
@@ -62,6 +66,7 @@ export default function App() {
   const [activeTour,          setActiveTour]          = useState(null);
   const [activeSongNotif,     setActiveSongNotif]     = useState(null);
   const [activeMiniGame,      setActiveMiniGame]      = useState(null);
+  const [lastChatFromJ,       setLastChatFromJ]       = useState(null);
 
   // ─── LIKES ───────────────────────────────────────────────
   const [likeCount, setLikeCount] = useState(0);
@@ -134,6 +139,9 @@ export default function App() {
   const handleTour          = useCallback(t => setActiveTour(t), []);
   const handleSongNotif     = useCallback(n => setActiveSongNotif(n), []);
   const handleMinigame      = useCallback(m => setActiveMiniGame(m), []);
+  const handleChatMessage   = useCallback(msg => {
+    if (msg.from === 'j') setLastChatFromJ(msg);
+  }, []);
   const handleEffect        = useCallback((effect) => {
     setActiveEffect(effect);
     setTimeout(() => setActiveEffect(null), 1000);
@@ -269,6 +277,9 @@ export default function App() {
           </div>
         )}
 
+        {/* ── ESCENA MINIJUEGO ───────────────── */}
+        <MinigameScene isActive={!!activeMiniGame} />
+
         {/* ── CAPA 4: LETRAS — solo cuando empieza la experiencia ── */}
         {hasStarted && (
           <div className="layer-lyrics">
@@ -297,6 +308,14 @@ export default function App() {
           visible={hasStarted}
           activeMiniGame={activeMiniGame}
           onMinigameMessage={handleMinigameMessage}
+          onNewMessage={handleChatMessage}
+          currentSong={
+            currentTime < 178 ? 'Imaginate' :
+            currentTime < 274 ? 'Vitamina' :
+            currentTime < 403 ? 'Volaré' :
+            currentTime < 610 ? 'Crayola' :
+            'Corazón'
+          }
         />
 
         {/* ── CAPA 6: UI ───────────────────────────────── */}
@@ -321,7 +340,7 @@ export default function App() {
           {isPlaying && (
             <LikeButton
               onLike={handleLike}
-              isSuperlike={isSuperlike}
+              isSuperlike={isSuperlike && !activeTour}
             />
           )}
 
@@ -347,6 +366,9 @@ export default function App() {
         {/* ── NOTIFICACIÓN DE CANCIÓN ─────────────────────── */}
         <SongNotification notification={activeSongNotif} />
 
+        {/* ── NOTIFICACIÓN DE CHAT (J. escribió) ─────────── */}
+        <ChatNotification message={lastChatFromJ} />
+
         {/* Sin video */}
         {videoError && (
           <div className="no-video-msg">
@@ -355,8 +377,21 @@ export default function App() {
           </div>
         )}
 
-        {/* ── TOUR SPOTLIGHT ───────────────────────────── */}
-        <TourSpotlight tourEvent={activeTour} containerRef={containerRef} />
+        {/* ── TOUR SPOTLIGHT + MASCOT + BACKGROUND ──────── */}
+        {activeTour && (
+          <>
+            <TourBackground 
+              isActive={!!activeTour} 
+              progress={currentTime / 14.5}
+            />
+            <TourSpotlight tourEvent={activeTour} containerRef={containerRef} />
+            <TourMascot 
+              tourEvent={activeTour} 
+              containerRef={containerRef}
+              progress={currentTime / 14.5}
+            />
+          </>
+        )}
 
         {/* ── MOTOR TIMELINE — solo cuando la experiencia comenzó ── */}
         {hasStarted && (

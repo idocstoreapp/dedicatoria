@@ -9,7 +9,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
  *  3. Si quedan opciones → J. dice cuántas quedan → opciones VUELVEN A APARECER
  *  4. Si no quedan → mensaje de cierre + done
  */
-export default function ChatMiniGame({ game, onMessage }) {
+export default function ChatMiniGame({ game, onMessage, onTyping }) {
   const [chosen,       setChosen]       = useState([]);
   const [done,         setDone]         = useState(false);
   const [introSent,    setIntroSent]    = useState(false);
@@ -29,10 +29,12 @@ export default function ChatMiniGame({ game, onMessage }) {
     setShowButtons(false);
   }, [game?.id]);
 
+  const panelRef = useRef(null);
+
   // Enviar intro de J. al activarse el minijuego
   useEffect(() => {
     if (!game || introSent) return;
-    console.log('[MiniGame] Sending intro for game:', game.id);
+    
     const delay = setTimeout(() => {
       setIntroSent(true);
       onMessage?.({
@@ -40,14 +42,29 @@ export default function ChatMiniGame({ game, onMessage }) {
         from: 'j',
         text: game.intro || 'elige una opción 🌹',
       });
-      // Dar tiempo para leer el mensaje antes de mostrar los botones
-      setTimeout(() => {
-        console.log('[MiniGame] showButtons → true for game:', game.id);
-        setShowButtons(true);
-      }, 2500);
     }, 700);
+    
     return () => clearTimeout(delay);
-  }, [game?.id, introSent]);
+  }, [game?.id, introSent, game?.intro, onMessage]);
+
+  // Mostrar los botones después de que se envía la intro
+  useEffect(() => {
+    if (!game || !introSent || showButtons) return;
+
+    const delay = setTimeout(() => {
+      setShowButtons(true);
+    }, 4500);
+
+    return () => clearTimeout(delay);
+  }, [game?.id, introSent, showButtons]);
+
+  useEffect(() => {
+    if (showButtons && !responding && panelRef.current) {
+      setTimeout(() => {
+        panelRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+  }, [showButtons, responding]);
 
   const handleChoose = useCallback((option) => {
     if (done || responding) return;
@@ -59,35 +76,50 @@ export default function ChatMiniGame({ game, onMessage }) {
     // Burbuja de ella eligiendo
     onMessage?.({ id: `mg-pick-${game.id}-${option.id}`, from: 'user', text: option.label });
 
-    // J. responde en 1.5s
+    // Iniciar indicador de "escribiendo..." de J
     setTimeout(() => {
+      onTyping?.(true);
+    }, 600);
+
+    // J. responde tras un delay más largo (ej. 3.5s)
+    setTimeout(() => {
+      onTyping?.(false);
       onMessage?.({ id: `mg-ans-${game.id}-${option.id}`, from: 'j', text: option.answer });
 
       const left = game.maxChoices - newChosen.length;
       if (left > 0) {
-        // Quedan opciones → decirle cuántas y volver a mostrar los botones
+        // J. vuelve a escribir para decir las opciones que quedan
         setTimeout(() => {
-          let leftMsg;
-          if (left === 1) {
-            leftMsg = '...te queda 1 sola — piénsala bien 💭';
-          } else {
-            leftMsg = `te quedan ${left} — elige otra 😌`;
-          }
+          onTyping?.(true);
+        }, 1200);
+
+        setTimeout(() => {
+          onTyping?.(false);
+          let leftMsg = left === 1 
+            ? '...te queda 1 sola — piénsala bien 💭' 
+            : `te quedan ${left} — elige otra 😌`;
+          
           onMessage?.({ id: `mg-left-${game.id}-${option.id}`, from: 'j', text: leftMsg });
+          
           // Dar tiempo suficiente para leer el mensaje antes de re-mostrar botones
           setTimeout(() => setResponding(false), 2500);
-        }, 1200);
+        }, 3200);
       } else {
         // Sin opciones → mensaje final + cerrar
         setTimeout(() => {
+          onTyping?.(true);
+        }, 1500);
+
+        setTimeout(() => {
+          onTyping?.(false);
           const endMsg = game.endMessage || 'eso era todo lo que quería que supieras 🌹';
           onMessage?.({ id: `mg-end-${game.id}`, from: 'j', text: endMsg });
           setDone(true);
           setResponding(false);
-        }, 1400);
+        }, 4000);
       }
-    }, 1500);
-  }, [chosen, done, responding, game, onMessage]);
+    }, 4100);
+  }, [chosen, done, responding, game, onMessage, onTyping]);
 
   // No renderizar nada si: no hay juego, terminó, no envió intro todavía, o los botones aún no deben verse
   if (!game || done || !introSent || !showButtons) return null;
@@ -102,7 +134,7 @@ export default function ChatMiniGame({ game, onMessage }) {
   if (available.length === 0) return null;
 
   return (
-    <div className="minigame-panel">
+    <div className="minigame-panel" ref={panelRef}>
       <div className="minigame-options">
         {available.map(opt => (
           <button key={opt.id} className="minigame-option" onClick={() => handleChoose(opt)}>

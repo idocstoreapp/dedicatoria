@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import ChatMiniGame from './ChatMiniGame.jsx';
+import { getGeminiResponse, getTypingDurationAI, maybeGetDoubleMessage } from '../utils/groq-ai.js';
+import { getAIResponse as getOfflineResponse } from '../utils/chat-ai-response.js';
 
-const TYPING_LEAD    = 2;
+const TYPING_LEAD    = 2;     // fallback: si no usamos AI, 2s antes del mensaje del timeline
 const MAX_VISIBLE    = 4;
 const LONG_PRESS_MS  = 520;
 
@@ -20,30 +22,32 @@ const STICKER_LIST = [
   '/assets/star.svg'
 ];
 
-function getJReaction(text) {
-  const t = text.toLowerCase();
-  if (/jaja|jeje|lol|haha|xd|😂/.test(t))                          return '😂';
-  if (/si\b|sí|claro|amor|me (gusta|encanta)|❤|💕|💖/.test(t))     return '❤️';
-  if (/no\b|todavía|aun|tal vez/.test(t))                           return '😅';
-  if (/wao|wow|dios|increíble|🔥/.test(t))                          return '🔥';
-  if (/🌹|rosa|bonit|linda/.test(t))                                return '🥰';
-  return '👀';
-}
-
 export default function SimulatedChat({
-  chatEvents = [], currentTime, senderConfig, visible = false, activeMiniGame, onMinigameMessage
+  chatEvents = [], currentTime, senderConfig, visible = false, activeMiniGame, onMinigameMessage, currentSong = null, onNewMessage
 }) {
   const [messages,        setMessages]        = useState([]);
   const [userReplies,     setUserReplies]     = useState({});
   const [msgReactions,    setMsgReactions]    = useState({});   // id → emoji (ella reacciona)
   const [jReactions,      setJReactions]      = useState({});   // id → emoji (J. reacciona)
+  const [msgReadReceipts, setMsgReadReceipts] = useState({});   // id → true (J. ya leyó el mensaje)
   const [activePrompt,    setActivePrompt]    = useState(null);
   const [inputValue,      setInputValue]      = useState('');
   const [showEmojiPanel,  setShowEmojiPanel]  = useState(false);
   const [showStickerPanel,setShowStickerPanel]= useState(false);
   const [reactionTarget,  setReactionTarget]  = useState(null); // msgId
   const [typingState,     setTypingState]     = useState('none'); // 'none'|'first-alert'|'typing'
+  const [miniGameTyping,  setMiniGameTyping]  = useState(false);
   const [showReactionTip, setShowReactionTip] = useState(false);
+  const [geminiFailed,    setGeminiFailed]    = useState(false);  // fallback activado si Gemini cae
+
+  // Refs para evitar closures stale en handleAIResponse
+  const geminiFailedRef = useRef(geminiFailed);
+  const currentSongRef  = useRef(currentSong);
+  const messagesRef     = useRef(messages);
+
+  useEffect(() => { geminiFailedRef.current = geminiFailed; }, [geminiFailed]);
+  useEffect(() => { currentSongRef.current  = currentSong; }, [currentSong]);
+  useEffect(() => { messagesRef.current     = messages; }, [messages]);
 
   // Callback directo para inyectar mensajes del minijuego sin filtro de tiempo
   const addDirectMessage = useCallback((msg) => {
@@ -102,6 +106,14 @@ export default function SimulatedChat({
     }
   }, [messages]);
 
+  // Notificar al padre cuando llega un mensaje nuevo de J.
+  useEffect(() => {
+    const lastMsg = messages[messages.length - 1];
+    if (lastMsg && lastMsg.from === 'j' && onNewMessage) {
+      onNewMessage(lastMsg);
+    }
+  }, [messages.length, onNewMessage]);
+
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, typingState]);
 
   // Cerrar paneles con click fuera — pero no justo después de un long-press
@@ -116,7 +128,7 @@ export default function SimulatedChat({
     return () => document.removeEventListener('click', close);
   }, []);
 
-  // ── Enviar mensaje ────────────────────────────────────────
+  // ── Enviar mensaje (Gemini AI + fallback offline) ─────────
   const submitMessage = useCallback((text, isSticker = false, src = null) => {
     if (!isSticker && !text?.trim()) return;
     const clean = isSticker ? '' : text.trim();
@@ -124,6 +136,20 @@ export default function SimulatedChat({
     setShowEmojiPanel(false);
     setShowStickerPanel(false);
 
+    // Marcar mensajes anteriores como "leídos"
+    setMsgReadReceipts(prev => {
+      const updated = { ...prev };
+      messages.forEach(m => { if (m.from === 'user') updated[m.id] = true; });
+      return updated;
+    });
+
+    const freeId = `free-${Date.now()}`;
+    const newMsg = isSticker
+      ? { id: freeId, from: 'user', type: 'sticker', src }
+      : { id: freeId, from: 'user', text: clean };
+    setMessages(prev => [...prev, newMsg]);
+
+    // ── Para prompts del timeline, usar conditionalReplies primero ──
     if (activePrompt && !userReplies[activePrompt.id] && !isSticker) {
       const eventId  = activePrompt.id;
       const replyId  = `${eventId}-reply`;
@@ -139,30 +165,78 @@ export default function SimulatedChat({
           if (r.match.some(kw => lower.includes(kw.toLowerCase()))) { jReply = r.response; break; }
         }
       }
-      const delay = 1800 + Math.random() * 1200;
-      setTimeout(() => {
-        if (jReply) {
+      if (jReply) {
+        setTimeout(() => {
           setMessages(prev => [...prev, { id: `${replyId}-j`, from: 'j', text: jReply }]);
-        } else {
-          setJReactions(prev => ({ ...prev, [replyId]: getJReaction(clean) }));
-        }
-      }, delay);
-    } else {
-      // Mensaje libre o sticker → J. solo reacciona
-      const freeId = `free-${Date.now()}`;
-      const newMsg = isSticker 
-        ? { id: freeId, from: 'user', type: 'sticker', src } 
-        : { id: freeId, from: 'user', text: clean };
-      setMessages(prev => [...prev, newMsg]);
-      setTimeout(() => {
-        if (isSticker) {
-          setJReactions(prev => ({ ...prev, [freeId]: '❤️' }));
-        } else {
-          setJReactions(prev => ({ ...prev, [freeId]: getJReaction(clean) }));
-        }
-      }, 1800 + Math.random() * 1200);
+          setMsgReadReceipts(prev => ({ ...prev, [replyId]: true }));
+        }, 1800 + Math.random() * 1200);
+        return;
+      }
     }
-  }, [activePrompt, userReplies, chatEvents]);
+
+    // ── Delegar a la función async ──
+    handleAIResponse(clean, freeId, isSticker);
+  }, [activePrompt, userReplies, chatEvents, currentSong, geminiFailed]);
+
+  // Función async separada (fuera de useCallback para evitar problemas)
+  const handleAIResponse = async (clean, freeId, isSticker) => {
+    let aiResponse = null;
+
+    // ── Paso 1: Delay "leyendo el mensaje" ──
+    const readDelay = 800 + Math.random() * 1200;
+    await new Promise(r => setTimeout(r, readDelay));
+
+    // ── Paso 2: Empezar a "escribir" mientras la IA genera ──
+    setTypingState('typing');
+
+    // ── Paso 3: Generar respuesta ──
+    if (isSticker) {
+      aiResponse = ['❤️', 'qué lindo sticker :3', '🥰 me encanta'][Math.floor(Math.random() * 3)];
+    } else if (!geminiFailedRef.current) {
+      console.log('[Chat] Llamando a Groq para:', clean);
+      try {
+        aiResponse = await getGeminiResponse(clean, { currentSong: currentSongRef.current });
+        console.log('[Chat] Groq respondió:', aiResponse);
+        if (!aiResponse) throw new Error('Respuesta vacía');
+      } catch (err) {
+        console.warn('[Chat] Groq falló, usando fallback offline:', err.message);
+        setGeminiFailed(true);
+        aiResponse = getOfflineResponse(clean, { currentSong: currentSongRef.current, messageCount: messagesRef.current.length });
+        console.log('[Chat] Fallback offline:', aiResponse);
+      }
+    } else {
+      console.log('[Chat] Modo offline, usando patrones locales');
+      aiResponse = getOfflineResponse(clean, { currentSong: currentSongRef.current, messageCount: messagesRef.current.length });
+    }
+
+    if (aiResponse) {
+      // ── Paso 4: Typing natural (mínimo 1.5s, máximo 5s) ──
+      const typingTime = getTypingDurationAI(aiResponse);
+
+      await new Promise(r => setTimeout(r, typingTime));
+
+      setTypingState('none');
+      setMessages(prev => [...prev, { id: `${freeId}-j`, from: 'j', text: aiResponse }]);
+      setMsgReadReceipts(prev => ({ ...prev, [freeId]: true }));
+
+      // ── Paso 5: Doble mensaje (25% de probabilidad) ──
+      const doubleMsg = maybeGetDoubleMessage(aiResponse);
+      if (doubleMsg) {
+        const doubleDelay = 600 + Math.random() * 800;
+        await new Promise(r => setTimeout(r, doubleDelay));
+
+        setTypingState('typing');
+        const doubleTyping = getTypingDurationAI(doubleMsg);
+        await new Promise(r => setTimeout(r, doubleTyping));
+
+        setTypingState('none');
+        setMessages(prev => [...prev, { id: `${freeId}-j2`, from: 'j', text: doubleMsg }]);
+      }
+    } else {
+      // Sin respuesta → quitar typing
+      setTypingState('none');
+    }
+  };
 
   // ── Long-press corregido ──────────────────────────────────
   const handlePressStart = (msgId) => {
@@ -262,6 +336,13 @@ export default function SimulatedChat({
                   )}
                   {myReaction && <span className="chat-reaction chat-reaction--hers">{myReaction}</span>}
                   {jsReaction && <span className="chat-reaction chat-reaction--j">{jsReaction}</span>}
+                  {/* Read receipts para mensajes del usuario */}
+                  {!isJ && msgReadReceipts[msg.id] && (
+                    <span className="chat-read-receipt">✓✓</span>
+                  )}
+                  {!isJ && !msgReadReceipts[msg.id] && (
+                    <span className="chat-read-receipt chat-read-receipt--sent">✓</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -277,7 +358,7 @@ export default function SimulatedChat({
         )}
 
         {/* Typing normal */}
-        {typingState === 'typing' && (
+        {(typingState === 'typing' || miniGameTyping) && (
           <div className="chat-bubble-row">
             <div className="chat-bubble chat-bubble--j">
               <div className="chat-avatar-wrap">
@@ -297,6 +378,7 @@ export default function SimulatedChat({
         <ChatMiniGame
           game={activeMiniGame}
           onMessage={addDirectMessage}
+          onTyping={setMiniGameTyping}
         />
 
         <div ref={bottomRef} />

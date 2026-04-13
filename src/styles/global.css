@@ -936,6 +936,7 @@ body {
   color: rgba(255, 255, 255, 0.9);
   line-height: 1.6;
   text-align: center;
+  opacity: 0;
   transition: opacity 1.4s ease;
 }
 
@@ -965,19 +966,24 @@ body {
 /* Estados fade in / fade out — solo opacidad, sin movimiento */
 .intro-msg--in {
   opacity: 1;
-  animation: intro-msg-in 1.4s ease forwards;
+  transition: opacity 1.4s ease;
 }
 
 .intro-msg--out {
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.6s ease;
 }
 
 @keyframes intro-msg-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
+  from {
+    opacity: 0;
+  }
 
+  to {
+    opacity: 1;
+  }
+}
 
 .intro-cursor {
   display: inline-block;
@@ -1876,7 +1882,29 @@ body {
   }
 }
 
-/* Botones de respuesta */
+/* Read receipts (✓ / ✓✓) */
+.chat-read-receipt {
+  position: absolute;
+  bottom: -9px;
+  right: 6px;
+  font-size: 11px;
+  color: #888;
+  font-weight: 600;
+  letter-spacing: -1px;
+  transition: color 0.3s ease;
+}
+
+.chat-read-receipt--sent {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Cuando J. responde, los ✓✓ se ponen azules como WhatsApp */
+.chat-read-receipt:has(+ .chat-reaction--j),
+.chat-bubble:has(.chat-reaction--j) .chat-read-receipt {
+  color: #4fc3f7;
+}
+
+/* Sticker img en chat */
 .chat-options {
   display: flex;
   flex-wrap: wrap;
@@ -1925,52 +1953,181 @@ body {
   }
 }
 
-/* ??????????????????????????????????????????????????????????
-   TOUR SPOTLIGHT
-?????????????????????????????????????????????????????????? */
+/* ══════════════════════════════════════════════════════════
+   TOUR SPOTLIGHT — Enhanced Interactive Version
+   ══════════════════════════════════════════════════════════ */
 .tour-spotlight {
   position: absolute;
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  z-index: 999;
+  z-index: 40;
+  /* Entre overlay (30) y UI (50) */
 }
 
+/* Aura luminosa — detrás del spotlight */
+.tour-aura {
+  position: absolute;
+  inset: -10px;
+  border-radius: inherit;
+  background: radial-gradient(circle,
+      rgba(255, 68, 136, 0.25) 0%,
+      rgba(255, 136, 48, 0.15) 40%,
+      rgba(136, 0, 255, 0.08) 70%,
+      transparent 100%);
+  animation: tour-aura-glow 2s ease-in-out infinite;
+  filter: blur(8px);
+  z-index: 15;
+}
+
+@keyframes tour-aura-glow {
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* Anillos con gradientes */
 .tour-ring {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  border: 2px solid rgba(255, 68, 136, 0.85);
-  animation: tour-ring-pulse 1.4s ease-out infinite;
+  animation: tour-ring-pulse-enhanced 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.tour-ring--gradient {
+  border: 3px solid transparent;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)) padding-box,
+    linear-gradient(90deg,
+      #ff4488,
+      #ff8830,
+      #8800ff,
+      #ff4488) border-box;
+  background-size: 200% 100%;
+  animation: tour-ring-gradient 3s linear infinite, tour-ring-pulse-enhanced 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+
+.tour-ring--1 {
+  animation-delay: 0s;
 }
 
 .tour-ring--2 {
-  animation-delay: 0.35s;
-  border-color: rgba(255, 136, 48, 0.65);
+  animation-delay: 0.4s;
 }
 
 .tour-ring--3 {
-  animation-delay: 0.70s;
-  border-color: rgba(136, 0, 255, 0.45);
+  animation-delay: 0.8s;
 }
 
-@keyframes tour-ring-pulse {
+@keyframes tour-ring-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes tour-ring-pulse-enhanced {
   0% {
     transform: scale(1);
     opacity: 1;
   }
 
-  70% {
-    transform: scale(1.7);
-    opacity: 0.3;
+  60% {
+    transform: scale(1.8);
+    opacity: 0.5;
   }
 
   100% {
-    transform: scale(2.2);
+    transform: scale(2.5);
     opacity: 0;
   }
 }
 
+/* Partículas orbitando */
+.tour-orbitals {
+  position: absolute;
+  inset: -20px;
+  animation: tour-orbitals-spin 4s linear infinite;
+  z-index: 40;
+}
+
+.tour-orbital {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, #ff4488);
+  box-shadow: 0 0 8px #ff4488, 0 0 16px #ff8830;
+  animation: tour-orbital-float 2s ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+.tour-orbital:nth-child(1) {
+  top: 0;
+  left: 50%;
+}
+
+.tour-orbital:nth-child(2) {
+  top: 15%;
+  right: 15%;
+}
+
+.tour-orbital:nth-child(3) {
+  top: 50%;
+  right: 0;
+}
+
+.tour-orbital:nth-child(4) {
+  bottom: 15%;
+  right: 15%;
+}
+
+.tour-orbital:nth-child(5) {
+  bottom: 0;
+  left: 50%;
+}
+
+.tour-orbital:nth-child(6) {
+  bottom: 15%;
+  left: 15%;
+}
+
+@keyframes tour-orbitals-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes tour-orbital-float {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.5);
+    opacity: 1;
+  }
+}
+
+/* Tooltip con burbuja colorida */
 .tour-tip {
   position: absolute;
   white-space: nowrap;
@@ -1983,13 +2140,494 @@ body {
   font-size: 0.68rem;
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.04em;
-  animation: lyric-fade-in 0.4s ease forwards;
+  animation: tour-tip-appear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  pointer-events: none;
+  z-index: 1001;
+}
+
+.tour-tip--enhanced {
+  background: linear-gradient(135deg,
+      rgba(255, 68, 136, 0.25),
+      rgba(136, 0, 255, 0.25));
+  backdrop-filter: blur(12px);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-image: linear-gradient(135deg,
+      #ff4488,
+      #ff8830,
+      #8800ff) 1;
+  border-radius: 12px;
+  padding: 8px 14px;
+  box-shadow:
+    0 8px 32px rgba(255, 68, 136, 0.3),
+    0 0 20px rgba(255, 136, 48, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: tour-tip-enhanced 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  z-index: 1001;
+}
+
+.tour-tip-content {
+  position: relative;
+  z-index: 1;
+}
+
+.tour-tip-text {
+  background: linear-gradient(90deg,
+      #ff4488,
+      #ff8830,
+      #ff4488);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: tour-text-shimmer 2s linear infinite;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.tour-tip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.tour-tip--enhanced .tour-tip-arrow {
+  border: 8px solid transparent;
+  border-image: linear-gradient(135deg,
+      rgba(255, 68, 136, 0.8),
+      rgba(136, 0, 255, 0.8)) 1;
+}
+
+@keyframes tour-tip-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes tour-tip-enhanced {
+  from {
+    opacity: 0;
+    transform: scale(0.5) translateY(15px);
+    filter: blur(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes tour-text-shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOUR MASCOT — Animated Character
+   ══════════════════════════════════════════════════════════ */
+.tour-mascot-container {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 45;
+  pointer-events: none;
+  animation: tour-mascot-entrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes tour-mascot-entrance {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -80%) scale(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Partículas flotantes */
+.tour-particles {
+  position: absolute;
+  inset: -40px;
   pointer-events: none;
 }
 
-/* ??????????????????????????????????????????????????????????
+.tour-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #fff, #ff4488);
+  border-radius: 50%;
+  box-shadow: 0 0 6px #ff4488;
+  animation: tour-particle-float 3s ease-in-out infinite;
+  animation-delay: var(--delay);
+}
+
+.tour-particle:nth-child(1) {
+  top: 10%;
+  left: 20%;
+}
+
+.tour-particle:nth-child(2) {
+  top: 20%;
+  right: 30%;
+}
+
+.tour-particle:nth-child(3) {
+  top: 50%;
+  left: 10%;
+}
+
+.tour-particle:nth-child(4) {
+  top: 60%;
+  right: 20%;
+}
+
+.tour-particle:nth-child(5) {
+  bottom: 20%;
+  left: 30%;
+}
+
+.tour-particle:nth-child(6) {
+  bottom: 30%;
+  right: 10%;
+}
+
+.tour-particle:nth-child(7) {
+  top: 30%;
+  left: 40%;
+}
+
+.tour-particle:nth-child(8) {
+  bottom: 10%;
+  right: 40%;
+}
+
+@keyframes tour-particle-float {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: translateY(-20px) scale(1.5);
+    opacity: 1;
+  }
+}
+
+/* Burbuja de diálogo */
+.tour-mascot-bubble {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 15px;
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.95),
+      rgba(255, 240, 245, 0.95));
+  border-radius: 16px;
+  padding: 10px 16px;
+  box-shadow:
+    0 8px 32px rgba(255, 68, 136, 0.3),
+    0 0 0 2px rgba(255, 68, 136, 0.2);
+  animation: tour-bubble-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  white-space: nowrap;
+}
+
+.tour-mascot-bubble-tail {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(255, 240, 245, 0.95);
+}
+
+.tour-mascot-text {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: linear-gradient(90deg,
+      #ff4488,
+      #ff8830,
+      #8800ff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: tour-text-shimmer 2s linear infinite;
+}
+
+@keyframes tour-bubble-pop {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1) translateY(0);
+  }
+}
+
+/* Mascota - Corazoncito con carita */
+.tour-mascot {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  animation: tour-mascot-bounce 1s ease-in-out infinite;
+}
+
+@keyframes tour-mascot-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.tour-mascot-body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Corazón base */
+.tour-mascot-heart {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto;
+}
+
+.tour-mascot-heart-left,
+.tour-mascot-heart-right {
+  position: absolute;
+  width: 30px;
+  height: 45px;
+  background: linear-gradient(135deg,
+      #ff4488,
+      #ff8830);
+  border-radius: 30px 30px 0 0;
+  box-shadow:
+    0 0 20px rgba(255, 68, 136, 0.6),
+    inset 0 -5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tour-mascot-heart-left {
+  left: 25px;
+  top: 0;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+
+.tour-mascot-heart-right {
+  left: 0;
+  top: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+/* Carita */
+.tour-mascot-face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 35px;
+}
+
+/* Ojos */
+.tour-mascot-eyes {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+  margin-top: 8px;
+}
+
+.tour-mascot-eye {
+  width: 8px;
+  height: 8px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.tour-mascot-eye::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 3px;
+  height: 3px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.tour-mascot-eye.winking {
+  height: 4px;
+  border-radius: 0 0 50% 50%;
+}
+
+.tour-mascot-eye.hearts::before {
+  content: '♥';
+  font-size: 8px;
+  color: #ff4488;
+  background: transparent;
+  top: -2px;
+  right: -2px;
+  width: auto;
+  height: auto;
+}
+
+/* Boca */
+.tour-mascot-mouth {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  background: #1a1a1a;
+  border-radius: 0 0 12px 12px;
+  transition: all 0.3s ease;
+}
+
+.mouth-happy {
+  width: 12px;
+  height: 6px;
+  border-radius: 0 0 12px 12px;
+}
+
+.mouth-wave {
+  width: 14px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.mouth-love {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.mouth-heart-eyes {
+  width: 12px;
+  height: 6px;
+  border-radius: 0 0 12px 12px;
+}
+
+.mouth-wink {
+  width: 12px;
+  height: 6px;
+  border-radius: 0 0 12px 12px;
+  transform: translateX(-50%) scaleX(0.8);
+}
+
+.mouth-excited {
+  width: 14px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.mouth-party {
+  width: 12px;
+  height: 8px;
+  border-radius: 0 0 12px 12px;
+  background: linear-gradient(to bottom,
+      #1a1a1a 0%,
+      #ff4488 50%,
+      #1a1a1a 100%);
+}
+
+/* Mejillas */
+.tour-mascot-cheeks {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+
+.tour-mascot-cheek {
+  width: 8px;
+  height: 5px;
+  background: rgba(255, 100, 150, 0.6);
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+/* Patitas */
+.tour-mascot-paws {
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+}
+
+.tour-mascot-paw {
+  width: 12px;
+  height: 10px;
+  background: linear-gradient(135deg,
+      #ff6699,
+      #ff8830);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 68, 136, 0.5);
+  animation: tour-paw-wave 0.5s ease-in-out infinite alternate;
+}
+
+.tour-mascot-paw-left {
+  animation-delay: 0s;
+}
+
+.tour-mascot-paw-right {
+  animation-delay: 0.25s;
+}
+
+@keyframes tour-paw-wave {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOUR BACKGROUND — Canvas para partículas
+   ══════════════════════════════════════════════════════════ */
+.tour-background-canvas {
+  pointer-events: none;
+  z-index: 998;
+}
+
+/* ══════════════════════════════════════════════════════════
    CHAT INPUT
-?????????????????????????????????????????????????????????? */
+   ══════════════════════════════════════════════════════════ */
 .chat-input-area {
   margin-top: 8px;
   display: flex;
@@ -2560,6 +3198,50 @@ body {
 /* ??????????????????????????????????????????????????????????
    CHAT MINIJUEGO � Panel de opciones en el chat
 ?????????????????????????????????????????????????????????? */
+
+
+/* CHAT NOTIFICATION */
+.chat-notif {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 910;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(8, 0, 18, 0.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 10px 16px 10px 10px;
+  box-shadow: 0 6px 28px rgba(255, 68, 136, 0.35), 0 0 0 1px rgba(255, 68, 136, 0.15);
+  max-width: min(300px, calc(100vw - 24px));
+  width: max-content;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+.chat-notif--entering { animation: chat-notif-in 0.5s cubic-bezier(0.16,1,0.3,1) forwards; }
+.chat-notif--leaving { animation: chat-notif-out 0.45s ease forwards; }
+@keyframes chat-notif-in { from { opacity: 0; transform: translateX(-50%) translateY(-20px) scale(0.92); } to { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); } }
+@keyframes chat-notif-out { from { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); } to { opacity: 0; transform: translateX(-50%) translateY(-12px) scale(0.94); } }
+.chat-notif-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#ff4488,#ff8830); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 12px rgba(255,68,136,0.4); }
+.chat-notif-avatar-letter { font-size: 16px; font-weight: 700; color: #fff; }
+.chat-notif-content { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.chat-notif-label { font-family: var(--font-sans); font-size: 0.6rem; color: rgba(255,136,48,0.9); letter-spacing: 0.06em; font-weight: 600; }
+.chat-notif-text { font-family: var(--font-sans); font-size: 0.75rem; color: rgba(255,255,255,0.92); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-notif-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff4488; box-shadow: 0 0 8px #ff4488, 0 0 16px #ff8830; animation: chat-notif-dot-pulse 1.5s ease-in-out infinite; flex-shrink: 0; }
+@keyframes chat-notif-dot-pulse { 0%,100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.7; } }
+
+/* MINIGAME SCENE */
+.minigame-scene-canvas { pointer-events: none; z-index: 25; }
+.minigame-scene-overlay { position: absolute; inset: 0; z-index: 26; pointer-events: none; display: flex; align-items: center; justify-content: center; animation: minigame-overlay-fade 0.8s ease forwards; }
+.minigame-badge { background: rgba(8,0,18,0.85); backdrop-filter: blur(16px) saturate(180%); border: 2px solid rgba(255,200,50,0.4); border-radius: 20px; padding: 12px 28px; box-shadow: 0 8px 40px rgba(255,200,50,0.3), 0 0 0 1px rgba(255,200,50,0.2); animation: minigame-badge-pop 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards; opacity: 0; }
+.minigame-badge-text { font-family: var(--font-sans); font-size: 1.4rem; font-weight: 700; background: linear-gradient(90deg,#ffd700,#ff8830,#ffd700); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: tour-text-shimmer 2s linear infinite; letter-spacing: 0.05em; }
+@keyframes minigame-overlay-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes minigame-badge-pop { from { opacity: 0; transform: scale(0.5) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
 .minigame-panel {
   padding: 6px 4px 4px;
   display: flex;

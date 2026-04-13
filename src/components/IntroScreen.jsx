@@ -64,7 +64,7 @@ export default function IntroScreen({ onStart }) {
       }, 55);
 
       // El mensaje aparece visible desde el primer caracter
-      setMsgVisible(true);
+      requestAnimationFrame(() => requestAnimationFrame(() => setMsgVisible(true)));
       return () => clearInterval(interval);
     }
 
@@ -79,7 +79,7 @@ export default function IntroScreen({ onStart }) {
 
     // ── FASE 3: "hecha con mucho amor ❤️" ─────────────────
     if (phase === 'msg3') {
-      setMsgVisible(true);
+      requestAnimationFrame(() => requestAnimationFrame(() => setMsgVisible(true)));
       setTimeout(() => {
         setMsgVisible(false);
         setTimeout(() => setPhase('msg4'), FADE);
@@ -88,18 +88,18 @@ export default function IntroScreen({ onStart }) {
 
     // ── FASE 4: "hecha con mucho amor ❤️" ─────────────────
     if (phase === 'msg4') {
-      setMsgVisible(true);
+      requestAnimationFrame(() => requestAnimationFrame(() => setMsgVisible(true)));
       setTimeout(() => {
         setMsgVisible(false);
         setTimeout(() => setPhase('msg5'), FADE);
-      }, HOLD);
+      }, HOLD + 1500);
     }
 
     // ── FASE 5: "Espero que…" + "— J." juntos ────────────
     if (phase === 'msg5') {
-      setMsgVisible(true);
+      requestAnimationFrame(() => requestAnimationFrame(() => setMsgVisible(true)));
       // "— J." aparece 900ms después
-      setTimeout(() => setLine2Vis(true), 900);
+      setTimeout(() => setLine2Vis(true), 1900);
       // Ambos se van juntos
       setTimeout(() => {
         setMsgVisible(false);

@@ -43,57 +43,98 @@ const t = (timestamp) => {
 export const timeline = [
 
   // ══════════════════════════════════════════════════════════
-  //  TOUR DE BIENVENIDA  (0 – 15.5s)
-  //  Negro total. El video ya está buffereando en fondo.
+  //  TOUR DE BIENVENIDA INTERACTIVO  (0 – 14.5s)
+  //  Negro total al inicio, aparece el video progresivamente.
+  //  Tour divertido y visual con mascota animada.
   // ══════════════════════════════════════════════════════════
-  { id: "tour-blackout", start: 0, end: 15.5, type: "blackout" },
+
+  // Negro total al inicio (se va aclarando progresivamente)
+  { id: "tour-blackout", start: 0, end: 12.5, type: "blackout" },
+
+  // Beat glow sutil durante el tour
   {
     id: "beat-tour", start: 0, end: 157.5, type: "beat",
-    color: "#2aff7cff", colorB: "#8b26e4ff", bpm: 25, intensity: 0.8
+    color: "#2aff7cff", colorB: "#8b26e4ff", bpm: 25, intensity: 0.6
   },
 
-  // Título de la sesión
+  // 1️⃣ Bienvenida con efecto (0.5 – 2.5s)
   {
-    id: "tour-sesion", start: 0.5, end: 3.5, type: "lyric",
-    content: "Dany Ocean · Casaparlante", style: "minimal",
-    animation: "fade", position: "center",
+    id: "tour-welcome", start: 0.5, end: 2.5, type: "lyric",
+    content: "hola de nuevo ✨",
+    style: "minimal", animation: "zoom", position: "center",
   },
 
-  // Enfoca botón ❤️
+  // Flash de transición
+  { id: "effect-tour-1", start: 2.5, type: "effect", effect: "flash" },
+
+  // 2️⃣ Título con estilo (2.5 – 4.5s)
   {
-    id: "lyric-tour-like", start: 3.5, end: 7, type: "lyric",
-    content: "te dejé un ❤️\npara cuando te esté gustando",
+    id: "tour-sesion", start: 2.5, end: 4.5, type: "lyric",
+    content: "Dany Ocean · Casaparlante\nuna dedicatoria para ti 🌹",
+    style: "minimal", animation: "fade", position: "center",
+  },
+
+  // Flash de transición
+  { id: "effect-tour-2", start: 4.5, type: "effect", effect: "flash" },
+
+  // 3️⃣ Tour ❤️ Like Button (4.5 – 7.5s)
+  {
+    id: "tour-like-intro", start: 4.5, end: 6.5, type: "lyric",
+    content: "te dejé un corazoncito escondido",
+    style: "minimal", animation: "bounce", position: "center",
+  },
+  {
+    id: "tour-like", start: 5.5, end: 8, type: "tour",
+    target: "like-btn", tip: "dale ❤️ cuando te guste algo", tipPosition: "left",
+  },
+  // Arcoíris sutil en el botón
+  { id: "superlike-tour", start: 5.5, end: 8, type: "superlike" },
+
+  // Transición
+  { id: "effect-tour-3", start: 8, type: "effect", effect: "flash" },
+
+  // 4️⃣ Tour Play/Pause (8 – 11s)
+  {
+    id: "tour-play-intro", start: 8, end: 10, type: "lyric",
+    content: "un botón de play/pausa para... bueno, ya sabes jjj",
+    style: "minimal", animation: "slide", position: "center",
+  },
+  {
+    id: "tour-play", start: 9, end: 11.5, type: "tour",
+    target: "mini-pause-btn", tip: "pausa cuando quieras :3", tipPosition: "right",
+  },
+
+  // Transición
+  { id: "effect-tour-4", start: 11.5, type: "effect", effect: "flash" },
+
+  // 5️⃣ Tour Chat (11.5 – 14s)
+  {
+    id: "tour-chat-intro", start: 11.5, end: 13, type: "lyric",
+    content: "ah, y hay un chat también\n(porque me da pena si te aburres :v)",
     style: "minimal", animation: "fade", position: "center",
   },
   {
-    id: "tour-like", start: 3.5, end: 7, type: "tour",
-    target: "like-btn", tip: "dale ❤️ cuando quieras", tipPosition: "left",
+    id: "tour-chat", start: 12, end: 14.5, type: "tour",
+    target: "chat-panel", tip: "aquí te hablo mientras disfrutas 💬", tipPosition: "top",
   },
 
-  // Enfoca botón play
+  // El video aparece progresivamente (13s+)
   {
-    id: "lyric-tour-play", start: 7.5, end: 11, type: "lyric",
-    content: "un boton de play/pausa para... bueno ya sabes para que sirve jjj",
-    style: "minimal", animation: "fade", position: "center",
-  },
-  {
-    id: "tour-play", start: 7.5, end: 11, type: "tour",
-    target: "mini-pause-btn", tip: "pausa cuando quieras", tipPosition: "right",
+    id: "tour-video-reveal", start: 13, end: 15.5, type: "lyric",
+    content: "listo? empieza la música 🎵",
+    style: "minimal", animation: "glow", position: "center",
   },
 
-  // Gancho final del tour
-  {
-    id: "tour-robar", start: 11.5, end: 15.5, type: "lyric",
-    content: "espero hacerte compañia estos 20 minutos\nque te voy a robar...",
-    style: "minimal", animation: "fade", position: "center",
-  },
+  // Flash final cuando el video aparece
+  { id: "effect-tour-final", start: 14.5, type: "effect", effect: "flash" },
+  { id: "effect-tour-shake", start: 14.5, type: "effect", effect: "shake" },
 
   // ══════════════════════════════════════════════════════════
-  //  VIDEO APARECE (15.5+)
+  //  VIDEO APARECE (14.5s+)
   // ══════════════════════════════════════════════════════════
 
   // Escenas de fondo
-  { id: "scene-babylon", start: 15.5, end: t("2:58"), type: "scene", scene: "starfield" },
+  { id: "scene-babylon", start: 14.5, end: t("2:58"), type: "scene", scene: "starfield" },
   { id: "scene-vitamina", start: t("2:58"), end: t("4:34"), type: "scene", scene: "hearts-background" },
   { id: "scene-volare", start: t("4:34"), end: t("6:43"), type: "scene", scene: "neon-rain" },
   { id: "scene-crayola", start: t("6:43"), end: t("10:10"), type: "scene", scene: "starfield" },
@@ -101,14 +142,8 @@ export const timeline = [
 
   // Beat glow exterior continuo
   {
-    id: "beat-main", start: 15.5, end: 999, type: "beat",
+    id: "beat-main", start: 14.5, end: 999, type: "beat",
     color: "#ff4488", colorB: "#8800ff", bpm: 85, intensity: 0.4,
-  },
-
-  // Spotlight en el chat al inicio
-  {
-    id: "tour-chat-focus", start: 16, end: 20, type: "tour",
-    target: "chat-panel", tip: "también hay un chat para ti 💬", tipPosition: "top",
   },
 
   // ══════════════════════════════════════════════════════════
@@ -286,7 +321,7 @@ export const timeline = [
   {
     id: "bg-marquee-2", start: 118.5, end: 119.5, type: "lyric",
     content: "Yo te llevo cuando cambien el presidente",
-    style: "urban", animation: "snake-loop", position: "center",
+    style: "urban", animation: "glow", position: "center",
   },
   {
     id: "bg-27", start: 120.2, end: 126, type: "lyric",
@@ -396,91 +431,91 @@ export const timeline = [
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-8", start: 30.2, end: 33, type: "lyric",
+    id: "vit-8", start: 208.2, end: 211, type: "lyric",
     content: "Tú y yo",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-9", start: 33.2, end: 38, type: "lyric",
+    id: "vit-9", start: 211.2, end: 216, type: "lyric",
     content: "Aunque nunca te lo dije, yo soy tuyo, mi amor",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-10", start: 38.2, end: 42, type: "lyric",
+    id: "vit-10", start: 216.2, end: 220, type: "lyric",
     content: "Tú y yo, ¿te imaginas?",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-11", start: 42.2, end: 46, type: "lyric",
+    id: "vit-11", start: 220.2, end: 224, type: "lyric",
     content: "Un amor que no se termina",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-12", start: 46.2, end: 50, type: "lyric",
+    id: "vit-12", start: 224.2, end: 228, type: "lyric",
     content: "Es como vitamina, tú y yo",
     style: "urban", animation: "glow", position: "center-bar", feature: true,
   },
   {
-    id: "vit-13", start: 50.2, end: 53, type: "lyric",
+    id: "vit-13", start: 228.2, end: 231, type: "lyric",
     content: "Cuando hacemos el amor",
     style: "romantic", animation: "fade", position: "center-bar",
   },
 
   // VERSE 2
   {
-    id: "vit-14", start: 54, end: 57, type: "lyric",
+    id: "vit-14", start: 232, end: 235, type: "lyric",
     content: "Tú y yo (yeah)",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-15", start: 57.2, end: 63, type: "lyric",
+    id: "vit-15", start: 235.2, end: 241, type: "lyric",
     content: "Ya tenemo' vario' año' dando vuelta en esta situación",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-16", start: 63.2, end: 65.5, type: "lyric",
+    id: "vit-16", start: 241.2, end: 243.5, type: "lyric",
     content: "My love",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-17", start: 65.7, end: 70.5, type: "lyric",
+    id: "vit-17", start: 243.7, end: 248.5, type: "lyric",
     content: "Yo estaba enamora'o cuando te quité el pantalón",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-18", start: 71, end: 74.5, type: "lyric",
+    id: "vit-18", start: 249, end: 252.5, type: "lyric",
     content: "Quiero repetirte los besos",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-19", start: 74.7, end: 78, type: "lyric",
+    id: "vit-19", start: 252.7, end: 256, type: "lyric",
     content: "Hasta conocerte los huesos",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-20", start: 78.2, end: 82, type: "lyric",
+    id: "vit-20", start: 256.2, end: 260, type: "lyric",
     content: "Dime si estás puesta pa' eso",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-21", start: 82.2, end: 86, type: "lyric",
+    id: "vit-21", start: 260.2, end: 264, type: "lyric",
     content: "O si me muero solo, mi amor",
     style: "romantic", animation: "fade", position: "center-bar",
   },
 
   // BRIDGE (dinámico)
   {
-    id: "vit-22", start: 87, end: 92, type: "lyric",
+    id: "vit-22", start: 265, end: 270, type: "lyric",
     content: "Ey, dale, mi reina, no te me demores",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-23", start: 92.2, end: 97, type: "lyric",
+    id: "vit-23", start: 270.2, end: 275, type: "lyric",
     content: "En el mundo, hay muchos sabore'",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-24", start: 97.2, end: 101, type: "lyric",
+    id: "vit-24", start: 275.2, end: 279, type: "lyric",
     content: "Aunque andemos con otros amores",
     style: "urban", animation: "fade", position: "center-bar",
   },
@@ -531,225 +566,225 @@ export const timeline = [
 
   // HOOK INICIAL
   {
-    id: "vol-1", start: 0, end: 3, type: "lyric",
+    id: "vol-1", start: 290, end: 293, type: "lyric",
     content: "Volaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-2", start: 3.1, end: 6, type: "lyric",
+    id: "vol-2", start: 293.1, end: 296, type: "lyric",
     content: "Danzaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-3", start: 6.1, end: 9, type: "lyric",
+    id: "vol-3", start: 296.1, end: 299, type: "lyric",
     content: "Me besaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-4", start: 9.1, end: 13, type: "lyric",
+    id: "vol-4", start: 299.1, end: 303, type: "lyric",
     content: "Siendo novios o amigos",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
 
   {
-    id: "vol-5", start: 13.2, end: 16, type: "lyric",
+    id: "vol-5", start: 303.2, end: 306, type: "lyric",
     content: "Volaré contigo, mami",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-6", start: 16.1, end: 19, type: "lyric",
+    id: "vol-6", start: 306.1, end: 309, type: "lyric",
     content: "Bailaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-7", start: 19.1, end: 23, type: "lyric",
+    id: "vol-7", start: 309.1, end: 312, type: "lyric",
     content: "Te amaré por siempre",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-8", start: 23.1, end: 27, type: "lyric",
+    id: "vol-8", start: 312.1, end: 316, type: "lyric",
     content: "Aunque no estés aquí conmigo",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
 
   // VERSE 1
   {
-    id: "vol-9", start: 28, end: 31, type: "lyric",
+    id: "vol-9", start: 316.2, end: 319, type: "lyric",
     content: "Me pones romántico",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-10", start: 31.2, end: 36, type: "lyric",
+    id: "vol-10", start: 319.2, end: 324, type: "lyric",
     content: "Y eso que estás del otro lado del Atlántico",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-11", start: 36.2, end: 39, type: "lyric",
+    id: "vol-11", start: 324.2, end: 327, type: "lyric",
     content: "Bambina, se siente fantástico",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-12", start: 39.2, end: 42, type: "lyric",
+    id: "vol-12", start: 327.2, end: 330, type: "lyric",
     content: "Te mando un beso elástico",
     style: "urban", animation: "glow", position: "center-bar",
   },
 
   {
-    id: "vol-13", start: 43, end: 46, type: "lyric",
+    id: "vol-13", start: 330.2, end: 333, type: "lyric",
     content: "Yo voy, tú ven, tú ven, yo voy",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-14", start: 46.2, end: 50, type: "lyric",
+    id: "vol-14", start: 333.2, end: 337, type: "lyric",
     content: "Tú me traes Nutella, yo te enseño Savoy",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-15", start: 50.2, end: 54, type: "lyric",
+    id: "vol-15", start: 337.2, end: 341, type: "lyric",
     content: "Tú tan playa Positano, yo tranquilo Morrocoy",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-16", start: 54.2, end: 57, type: "lyric",
+    id: "vol-16", start: 341.2, end: 344, type: "lyric",
     content: "Ey, quiero ser tu Babylon boy",
     style: "urban", animation: "glow", position: "center-bar", feature: true,
   },
 
   // HOOK REPITE
   {
-    id: "vol-17", start: 58, end: 61, type: "lyric",
+    id: "vol-17", start: 345.2, end: 348, type: "lyric",
     content: "Volaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-18", start: 61.1, end: 64, type: "lyric",
+    id: "vol-18", start: 348.1, end: 351, type: "lyric",
     content: "Danzaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-19", start: 64.1, end: 67, type: "lyric",
+    id: "vol-19", start: 351.1, end: 354, type: "lyric",
     content: "Me besaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-20", start: 67.1, end: 71, type: "lyric",
+    id: "vol-20", start: 354.1, end: 358, type: "lyric",
     content: "Siendo novios o amigos",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
 
   {
-    id: "vol-21", start: 71.2, end: 74, type: "lyric",
+    id: "vol-21", start: 358.2, end: 361, type: "lyric",
     content: "Volaré contigo, mami",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-22", start: 74.1, end: 77, type: "lyric",
+    id: "vol-22", start: 361.1, end: 364, type: "lyric",
     content: "Bailaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-23", start: 77.1, end: 81, type: "lyric",
+    id: "vol-23", start: 364.1, end: 368, type: "lyric",
     content: "Te amaré por siempre",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-24", start: 81.1, end: 85, type: "lyric",
+    id: "vol-24", start: 368.1, end: 372, type: "lyric",
     content: "Aunque no estés aquí conmigo",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
 
   // VERSE 2
   {
-    id: "vol-25", start: 86, end: 89, type: "lyric",
+    id: "vol-25", start: 372.2, end: 375, type: "lyric",
     content: "Buongiorno, principessa",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-26", start: 89.2, end: 94, type: "lyric",
+    id: "vol-26", start: 375.2, end: 380, type: "lyric",
     content: "Amore mío, no te saco de la cabeza, estoy a mil",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-27", start: 94.2, end: 96, type: "lyric",
+    id: "vol-27", start: 380.2, end: 383, type: "lyric",
     content: "Ey, porfa, manda PIN",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-28", start: 96.2, end: 98.5, type: "lyric",
+    id: "vol-28", start: 383.2, end: 385.5, type: "lyric",
     content: "O acércate un chin",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-29", start: 98.7, end: 101, type: "lyric",
+    id: "vol-29", start: 385.7, end: 388, type: "lyric",
     content: "Que te hago un ling-ling",
     style: "urban", animation: "glow", position: "center-bar",
   },
 
   {
-    id: "vol-30", start: 102, end: 105, type: "lyric",
+    id: "vol-30", start: 388.2, end: 391, type: "lyric",
     content: "Yo voy, tú ven, tú ven, yo voy",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-31", start: 105.2, end: 108, type: "lyric",
+    id: "vol-31", start: 391.2, end: 394, type: "lyric",
     content: "Tú Nutella y yo Savoy",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-32", start: 108.2, end: 112, type: "lyric",
+    id: "vol-32", start: 394.2, end: 397, type: "lyric",
     content: "Yo me lanzo Positano, si tu Morrocoy",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-33", start: 112.2, end: 115, type: "lyric",
+    id: "vol-33", start: 397.2, end: 400, type: "lyric",
     content: "Voy a ser tu Babylon boy",
     style: "urban", animation: "glow", position: "center-bar", feature: true,
   },
 
   // FINAL HOOK
   {
-    id: "vol-34", start: 116, end: 119, type: "lyric",
+    id: "vol-34", start: 400.2, end: 403, type: "lyric",
     content: "Volaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-35", start: 119.1, end: 122, type: "lyric",
+    id: "vol-35", start: 403.1, end: 406, type: "lyric",
     content: "Danzaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-36", start: 122.1, end: 125, type: "lyric",
+    id: "vol-36", start: 406.1, end: 409, type: "lyric",
     content: "Me besaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-37", start: 125.1, end: 129, type: "lyric",
+    id: "vol-37", start: 409.1, end: 413, type: "lyric",
     content: "Siendo novios o amigos",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
 
   {
-    id: "vol-38", start: 129.2, end: 132, type: "lyric",
+    id: "vol-38", start: 413.2, end: 416, type: "lyric",
     content: "Volaré contigo, mami",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-39", start: 132.1, end: 135, type: "lyric",
+    id: "vol-39", start: 416.1, end: 419, type: "lyric",
     content: "Bailaré contigo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-40", start: 135.1, end: 139, type: "lyric",
+    id: "vol-40", start: 419.1, end: 423, type: "lyric",
     content: "Te amaré por siempre",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vol-41", start: 139.1, end: 144, type: "lyric",
+    id: "vol-41", start: 423.1, end: 427, type: "lyric",
     content: "Aunque no estés aquí conmigo",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
 
-  { id: "effect-vol-2", start: 395, type: "effect", effect: "shake" },
+  { id: "effect-vol-2", start: 415, type: "effect", effect: "shake" },
 
   // ══════════════════════════════════════════════════════════
   //  ♪ CRAYOLA  —  6:43 (403s) · canta 6:55.5 (415.5s)
@@ -765,209 +800,209 @@ export const timeline = [
 
   // INTRO / VERSE
   {
-    id: "col-1", start: 0, end: 4.5, type: "lyric",
+    id: "col-1", start: 416, end: 420.5, type: "lyric",
     content: "Qué loco que me pongo todo loco cada vez que te veo",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-2", start: 4.7, end: 9, type: "lyric",
+    id: "col-2", start: 420.7, end: 425, type: "lyric",
     content: "Cada vez que me escribes, me enamoro feo",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-3", start: 9.2, end: 13, type: "lyric",
+    id: "col-3", start: 425.2, end: 429, type: "lyric",
     content: "Ando todo mariquito, no sé qué coño es lo que me pasa",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-4", start: 13.2, end: 17.5, type: "lyric",
+    id: "col-4", start: 429.2, end: 433.5, type: "lyric",
     content: "Se me mueve el piso cuando pisas la casa",
     style: "urban", animation: "fade", position: "center-bar",
   },
 
   {
-    id: "col-5", start: 18, end: 22, type: "lyric",
+    id: "col-5", start: 434, end: 438, type: "lyric",
     content: "Voy a agarrar tu nombre entero y convertirlo en todos mis versos",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-6", start: 22.2, end: 26, type: "lyric",
+    id: "col-6", start: 438.2, end: 442, type: "lyric",
     content: "Voy a apretarte los cachetes e ir de una a zamparte esos besos",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-7", start: 26.2, end: 30.5, type: "lyric",
+    id: "col-7", start: 442.2, end: 446.5, type: "lyric",
     content: "Yo aún no entiendo cómo de lejos tú me causas ese mismo efecto",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-8", start: 30.7, end: 34.5, type: "lyric",
+    id: "col-8", start: 446.7, end: 450.5, type: "lyric",
     content: "Yo te extraño tanto por dentro y ya no es un secreto que",
     style: "urban", animation: "fade", position: "center-bar",
   },
 
   // PRE-HOOK
   {
-    id: "col-9", start: 35, end: 38, type: "lyric",
+    id: "col-9", start: 451, end: 454, type: "lyric",
     content: "Es que, mami tú",
     style: "romantic", animation: "fade", position: "center-bar",
   },
 
   // HOOK VISUAL (CLAVE)
   {
-    id: "col-10", start: 38.2, end: 42, type: "lyric",
+    id: "col-10", start: 454.2, end: 458, type: "lyric",
     content: "Tú me tienes viendo colores",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
   {
-    id: "col-11", start: 42.2, end: 46, type: "lyric",
+    id: "col-11", start: 458.2, end: 462, type: "lyric",
     content: "Amarillo sol, ojos de girasoles",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-12", start: 46.2, end: 49.5, type: "lyric",
+    id: "col-12", start: 462.2, end: 465.5, type: "lyric",
     content: "Azul playita y caracoles",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-13", start: 49.7, end: 53.5, type: "lyric",
+    id: "col-13", start: 465.7, end: 469.5, type: "lyric",
     content: "Te queda lindo el rojo, mientras no me traiciones",
     style: "romantic", animation: "fade", position: "center-bar",
   },
 
   {
-    id: "col-14", start: 54, end: 57, type: "lyric",
+    id: "col-14", start: 470, end: 473, type: "lyric",
     content: "Estrellita, ¿dónde estás?",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-15", start: 57.2, end: 60.5, type: "lyric",
+    id: "col-15", start: 473.2, end: 476.5, type: "lyric",
     content: "Ojalá no seas fugaz",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-16", start: 60.7, end: 64, type: "lyric",
+    id: "col-16", start: 476.7, end: 480, type: "lyric",
     content: "Cuando yo te vuelva a ver",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-17", start: 64.2, end: 68, type: "lyric",
+    id: "col-17", start: 480.2, end: 484, type: "lyric",
     content: "Voy a darte amor y hacerte la paz",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
 
   // VERSE 2
   {
-    id: "col-18", start: 69, end: 73, type: "lyric",
+    id: "col-18", start: 485, end: 489, type: "lyric",
     content: "To el mundo te quiere, to el mundo te adora",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-19", start: 73.2, end: 77, type: "lyric",
+    id: "col-19", start: 489.2, end: 493, type: "lyric",
     content: "¿Alguien como tú por qué está bailando sola?",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-20", start: 77.2, end: 81, type: "lyric",
+    id: "col-20", start: 493.2, end: 497, type: "lyric",
     content: "Tú me pintas la vida, pareces Crayola",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-21", start: 81.2, end: 85, type: "lyric",
+    id: "col-21", start: 497.2, end: 501, type: "lyric",
     content: "Te escribo poemas, te canto la zona",
     style: "urban", animation: "fade", position: "center-bar",
   },
 
   {
-    id: "col-22", start: 85.5, end: 89, type: "lyric",
+    id: "col-22", start: 501.5, end: 505, type: "lyric",
     content: "Tú siempre fuiste mi 0212",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-23", start: 89.2, end: 93, type: "lyric",
+    id: "col-23", start: 505.2, end: 509, type: "lyric",
     content: "Tú eres la única que me conoces",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-24", start: 93.2, end: 97.5, type: "lyric",
+    id: "col-24", start: 509.2, end: 513.5, type: "lyric",
     content: "Te conozco de memoria",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-25", start: 97.7, end: 102, type: "lyric",
+    id: "col-25", start: 513.7, end: 518, type: "lyric",
     content: "Te recorro to el cuerpo y tus caminos toa' las noches",
     style: "urban", animation: "fade", position: "center-bar",
   },
 
   {
-    id: "col-26", start: 102.2, end: 105, type: "lyric",
+    id: "col-26", start: 518.2, end: 521, type: "lyric",
     content: "No sé por qué",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-27", start: 105.2, end: 109, type: "lyric",
+    id: "col-27", start: 521.2, end: 525, type: "lyric",
     content: "Recorro tus caminos y tu cuerpo",
     style: "romantic", animation: "fade", position: "center-bar",
   },
 
   // HOOK REPITE
   {
-    id: "col-28", start: 110, end: 114, type: "lyric",
+    id: "col-28", start: 526, end: 530, type: "lyric",
     content: "Tú me tienes viendo colores",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
   {
-    id: "col-29", start: 114.2, end: 118, type: "lyric",
+    id: "col-29", start: 530.2, end: 534, type: "lyric",
     content: "Amarillo sol, ojos de girasoles",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-30", start: 118.2, end: 121.5, type: "lyric",
+    id: "col-30", start: 534.2, end: 537.5, type: "lyric",
     content: "Azul playita y caracoles",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-31", start: 121.7, end: 125.5, type: "lyric",
+    id: "col-31", start: 537.7, end: 541.5, type: "lyric",
     content: "Te queda lindo el rojo, mientras no me traiciones",
     style: "romantic", animation: "fade", position: "center-bar",
   },
 
   // OUTRO / EMOCIONAL
   {
-    id: "col-32", start: 126, end: 129, type: "lyric",
+    id: "col-32", start: 542, end: 545, type: "lyric",
     content: "Estrellita, ¿dónde estás?",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-33", start: 129.2, end: 132.5, type: "lyric",
+    id: "col-33", start: 545.2, end: 548.5, type: "lyric",
     content: "Ojalá no seas fugaz",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-34", start: 132.7, end: 136, type: "lyric",
+    id: "col-34", start: 548.7, end: 552, type: "lyric",
     content: "Voy a darte amor y hacerte la paz",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
 
   {
-    id: "col-35", start: 136.2, end: 140, type: "lyric",
+    id: "col-35", start: 552.2, end: 556, type: "lyric",
     content: "Después de tanto tiempo, tú me tienes viendo colores",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "col-36", start: 140.2, end: 144, type: "lyric",
+    id: "col-36", start: 556.2, end: 560, type: "lyric",
     content: "Amarillo sol, ojos de girasoles",
     style: "romantic", animation: "fade", position: "center-bar",
   },
 
   {
-    id: "col-37", start: 144.2, end: 147, type: "lyric",
+    id: "col-37", start: 560.2, end: 563, type: "lyric",
     content: "Amarillo, azul y rojo, baby",
     style: "romantic", animation: "glow", position: "center-bar",
   },
 
   {
-    id: "col-38", start: 147.2, end: 150, type: "lyric",
+    id: "col-38", start: 563.2, end: 566, type: "lyric",
     content: "Babylon Girl",
     style: "urban", animation: "fade", position: "center-bar",
   },
@@ -1049,149 +1084,149 @@ export const timeline = [
 
   // INTRO / VERSE 1
   {
-    id: "aos-1", start: 0, end: 5, type: "lyric",
+    id: "aos-1", start: 630, end: 635, type: "lyric",
     content: "No había ninguna intención, solo una tensión entre nosotros",
     style: "emotional", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-2", start: 5.2, end: 9.5, type: "lyric",
+    id: "aos-2", start: 635.2, end: 639.5, type: "lyric",
     content: "Era tanta la magia, baby, que se veía hasta en las fotos",
     style: "emotional", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-3", start: 9.7, end: 13.5, type: "lyric",
+    id: "aos-3", start: 639.7, end: 643.5, type: "lyric",
     content: "La idea era arreglarnos, no terminar más rotos",
     style: "emotional", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-4", start: 13.7, end: 17.5, type: "lyric",
+    id: "aos-4", start: 643.7, end: 647.5, type: "lyric",
     content: "Hubo un fallo en la dirección, era tu cama",
     style: "emotional", animation: "fade", position: "center-bar",
   },
 
   // DROP EMOCIONAL
   {
-    id: "aos-5", start: 18, end: 21, type: "lyric",
+    id: "aos-5", start: 648, end: 651, type: "lyric",
     content: "No tu corazón, bebé",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-6", start: 21.2, end: 25, type: "lyric",
+    id: "aos-6", start: 651.2, end: 655, type: "lyric",
     content: "Hicimos el amor una y otra vez",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-7", start: 25.2, end: 30, type: "lyric",
+    id: "aos-7", start: 655.2, end: 660, type: "lyric",
     content: "No sé ni cómo explicarlo, baby, ya no sé si fuimos agua o sed",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
   {
-    id: "aos-8", start: 30.2, end: 34.5, type: "lyric",
+    id: "aos-8", start: 660.2, end: 664.5, type: "lyric",
     content: "¿Y ahora cómo te digo que me enamoré?",
     style: "emotional", animation: "glow", position: "center-bar", feature: true,
   },
 
   // MINI BREAK
   {
-    id: "aos-9", start: 35, end: 38, type: "lyric",
+    id: "aos-9", start: 665, end: 668, type: "lyric",
     content: "No sé ni cómo explicarlo",
     style: "emotional", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-10", start: 38.2, end: 42, type: "lyric",
+    id: "aos-10", start: 668.2, end: 672, type: "lyric",
     content: "Baby, ya no sé si fuimos agua o sed",
     style: "romantic", animation: "glow", position: "center-bar",
   },
   {
-    id: "aos-11", start: 42.2, end: 44, type: "lyric",
+    id: "aos-11", start: 672.2, end: 674, type: "lyric",
     content: "Oh, oh",
     style: "ambient", animation: "fade", position: "center",
   },
 
   // VERSE 2
   {
-    id: "aos-12", start: 45, end: 50, type: "lyric",
+    id: "aos-12", start: 675, end: 680, type: "lyric",
     content: "Si nunca había una intención, ¿por qué tanto enredo entre nosotros?",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-13", start: 50.2, end: 54.5, type: "lyric",
+    id: "aos-13", start: 680.2, end: 684.5, type: "lyric",
     content: "Ya no quiero manejar si no vas a estar tú de copiloto",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-14", start: 54.7, end: 58.5, type: "lyric",
+    id: "aos-14", start: 684.7, end: 688.5, type: "lyric",
     content: "La culpa es de tu cara, que la veo y me vuelvo loco",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-15", start: 58.7, end: 62.5, type: "lyric",
+    id: "aos-15", start: 688.7, end: 692.5, type: "lyric",
     content: "Hubo un fallo en la dirección, era tu cama",
     style: "urban", animation: "fade", position: "center-bar",
   },
 
   // HOOK REPITE
   {
-    id: "aos-16", start: 63, end: 66, type: "lyric",
+    id: "aos-16", start: 693, end: 696, type: "lyric",
     content: "No tu corazón, bebé",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-17", start: 66.2, end: 70, type: "lyric",
+    id: "aos-17", start: 696.2, end: 700, type: "lyric",
     content: "Hicimos el amor una y otra vez",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-18", start: 70.2, end: 75, type: "lyric",
+    id: "aos-18", start: 700.2, end: 705, type: "lyric",
     content: "No sé ni cómo explicarlo, baby, ya no sé si fuimos agua o sed",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
   {
-    id: "aos-19", start: 75.2, end: 79, type: "lyric",
+    id: "aos-19", start: 705.2, end: 709, type: "lyric",
     content: "¿Y ahora cómo te digo que me enamoré?",
     style: "emotional", animation: "glow", position: "center-bar", feature: true,
   },
 
   // BRIDGE MUSICAL
   {
-    id: "aos-20", start: 80, end: 84, type: "lyric",
+    id: "aos-20", start: 710, end: 714, type: "lyric",
     content: "La-la-la-la, la-la-la-la",
     style: "ambient", animation: "fade", position: "center",
   },
   {
-    id: "aos-21", start: 84.2, end: 87, type: "lyric",
+    id: "aos-21", start: 714.2, end: 717, type: "lyric",
     content: "Uh-uh-uh-uh",
     style: "ambient", animation: "fade", position: "center",
   },
   {
-    id: "aos-22", start: 87.2, end: 91, type: "lyric",
+    id: "aos-22", start: 717.2, end: 721, type: "lyric",
     content: "Baby, ya no sé si fuimos agua o sed",
     style: "romantic", animation: "glow", position: "center-bar",
   },
   {
-    id: "aos-23", start: 91.2, end: 95, type: "lyric",
+    id: "aos-23", start: 721.2, end: 725, type: "lyric",
     content: "¿Y ahora cómo te digo que me enamoré?",
     style: "emotional", animation: "glow", position: "center-bar", feature: true,
   },
 
   // OUTRO FINAL
   {
-    id: "aos-24", start: 96, end: 100, type: "lyric",
+    id: "aos-24", start: 726, end: 730, type: "lyric",
     content: "De tu piel, de tu boca, de cómo hablas, de tus cosas",
     style: "emotional", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-25", start: 100.2, end: 105, type: "lyric",
+    id: "aos-25", start: 730.2, end: 735, type: "lyric",
     content: "De cómo esquivas los te quiero, tú me encantas porque estás loca",
     style: "emotional", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-26", start: 105.2, end: 110, type: "lyric",
+    id: "aos-26", start: 735.2, end: 740, type: "lyric",
     content: "De tu voz, de tus miedos, de tus victorias y tus derrotas",
     style: "emotional", animation: "fade", position: "center-bar",
   },
   {
-    id: "aos-27", start: 110.2, end: 115, type: "lyric",
+    id: "aos-27", start: 740.2, end: 745, type: "lyric",
     content: "Fue tan fácil para ti enamorarme con tu corazón",
     style: "emotional", animation: "glow", position: "center-bar", feature: true,
   },
