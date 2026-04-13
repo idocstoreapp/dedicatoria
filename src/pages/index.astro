@@ -39,7 +39,6 @@ if (isExternalVideo) {
 
     {videoOrigin && <link rel="preconnect" href={videoOrigin} crossorigin="anonymous" />}
     {videoOrigin && <link rel="dns-prefetch" href={videoOrigin} />}
-    {videoPreloadUrl && <link rel="preload" as="video" href={videoPreloadUrl} />}
 
     <!-- GSAP CDN — cargado antes del app para que los componentes lo usen -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" is:inline></script>

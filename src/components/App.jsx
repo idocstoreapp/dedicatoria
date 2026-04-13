@@ -36,7 +36,6 @@ export default function App() {
   // ─── REFS ────────────────────────────────────────────────
   const videoRef     = useRef(null);
   const containerRef = useRef(null);
-  const introPreviewSeekedRef = useRef(false);
 
   // ─── ESTADO REPRODUCTOR ──────────────────────────────────
   const [isPlaying,   setIsPlaying]   = useState(false);
@@ -166,73 +165,12 @@ export default function App() {
     requestAnimationFrame(() => {
       const video = videoRef.current;
       if (!video) return;
-      video.currentTime = 0;
+      // video.currentTime = 0; // Removido para evitar stall TCP de Cloudflare
       video.play().then(() => setIsPlaying(true)).catch(console.error);
     });
   }, []);
 
-  // Warm-up del inicio del archivo durante la intro para reducir latencia
-  // cuando la usuaria pulse INICIAR.
-  useEffect(() => {
-    if (view !== 'intro') return;
-    if (!currentVideoSrc) return;
 
-    const controller = new AbortController();
-
-    fetch(currentVideoSrc, {
-      headers: { Range: 'bytes=0-1800000' },
-      signal: controller.signal,
-    }).catch(() => {
-      // Silencioso: si el navegador/CDN ignora Range, el <video> mantiene preload.
-    });
-
-    return () => controller.abort();
-  }, [view, currentVideoSrc]);
-
-  // Warm-up del inicio del archivo durante la intro para reducir latencia
-  // cuando la usuaria pulse INICIAR.
-  useEffect(() => {
-    if (view !== 'intro') return;
-    if (!currentVideoSrc) return;
-
-    const controller = new AbortController();
-
-    fetch(currentVideoSrc, {
-      headers: { Range: 'bytes=0-1800000' },
-      signal: controller.signal,
-    }).catch(() => {
-      // Silencioso: si el navegador/CDN ignora Range, el <video> mantiene preload.
-    });
-
-    return () => controller.abort();
-  }, [view, currentVideoSrc]);
-
-  // Durante la intro, usar el fondo desde el minuto 1 (si el video lo permite).
-  useEffect(() => {
-    if (view !== 'intro') {
-      introPreviewSeekedRef.current = false;
-      return;
-    }
-
-    const video = videoRef.current;
-    if (!video) return;
-
-    const previewStart = Number(videoConfig.introPreviewStart ?? 60);
-    const seekIntroPreview = () => {
-      if (introPreviewSeekedRef.current) return;
-      if (!Number.isFinite(video.duration) || video.duration <= previewStart) return;
-      try {
-        video.currentTime = previewStart;
-        introPreviewSeekedRef.current = true;
-      } catch (err) {
-        console.warn('No se pudo mover el preview de intro:', err);
-      }
-    };
-
-    if (video.readyState >= 1) seekIntroPreview();
-    video.addEventListener('loadedmetadata', seekIntroPreview);
-    return () => video.removeEventListener('loadedmetadata', seekIntroPreview);
-  }, [view, currentVideoSrc]);
 
   // ─── BONUS → BIBLIOTECA ──────────────────────────────────
   const handleBonusFinished = useCallback(() => setView('library'), []);
@@ -295,7 +233,7 @@ export default function App() {
           <VideoPlayer
             ref={videoRef}
             src={currentVideoSrc}
-            autoPlay={view === 'intro'}
+            autoPlay={false}
             muted={view === 'intro' || videoConfig.muted}
             onTimeUpdate={handleTimeUpdate}
             onReady={handleVideoReady}
