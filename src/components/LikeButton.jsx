@@ -67,9 +67,9 @@ export default function LikeButton({ onLike, isSuperlike = false }) {
       {/* ── SPOTLIGHT ARTIFICIAL ── */}
       {isSuperlike && (
         <div className="superlike-spotlight">
-          <div className="tour-aura" />
-          <div className="tour-ring tour-ring--gradient tour-ring--1" />
-          <div className="tour-ring tour-ring--gradient tour-ring--2" />
+          <div className="superlike-circle" />
+          <div className="superlike-circle superlike-circle--2" />
+          <div className="superlike-circle superlike-circle--3" />
         </div>
       )}
 

@@ -1671,7 +1671,7 @@ body {
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 .like-btn-wrapper--super .like-btn {
   background: rgba(255, 255, 255, 0.18);
-  border-image: linear-gradient(135deg, #ff4488, #ff8800, #ffdd00, #44ff88, #00aaff, #8800ff) 1;
+  border: 2px solid #ff4488;
   border-width: 2px;
   border-style: solid;
   animation: superlike-glow 1.2s ease-in-out infinite alternate;
@@ -3465,8 +3465,32 @@ body {
   border-radius: 50% !important;
 }
 
-.superlike-spotlight * {
-  border-radius: 50% !important;
+.superlike-circle {
+  position: absolute;
+  inset: -15px;
+  border-radius: 50%;
+  border: 4px solid #ff4488;
+  box-shadow: 0 0 25px #ff4488, inset 0 0 15px #ff4488;
+  opacity: 0;
+  animation: superlike-circle-pulse 1.8s cubic-bezier(0.165, 0.84, 0.44, 1) infinite;
+  pointer-events: none;
+}
+
+.superlike-circle--2 {
+  animation-delay: 0.6s;
+  border-color: #00aaff;
+  box-shadow: 0 0 25px #00aaff, inset 0 0 15px #00aaff;
+}
+
+.superlike-circle--3 {
+  animation-delay: 1.2s;
+  border-color: #ffdd00;
+  box-shadow: 0 0 25px #ffdd00, inset 0 0 15px #ffdd00;
+}
+
+@keyframes superlike-circle-pulse {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.5); opacity: 0; }
 }
 
 .superlike-epic-alert {
