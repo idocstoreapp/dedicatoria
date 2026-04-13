@@ -359,39 +359,39 @@ export const timeline = [
   // Lyrics de Vitamina (canta desde 2:58)
 
   {
-    id: "vit-1", start: 0, end: 5, type: "lyric",
+    id: "vit-1", start: 177,3, end: 183, type: "lyric",
     content: "¿Qué hubiera pasado si tú y yo hubiésemos seguido esos besos?",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-2", start: 5.2, end: 10.5, type: "lyric",
+    id: "vit-2", start: 185, end: 188.8, type: "lyric",
     content: "¿Si ese día, de haber hecho el amor, hubiese estado confeso?",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-3", start: 10.7, end: 13.5, type: "lyric",
+    id: "vit-3", start: 189, end: 191, type: "lyric",
     content: "¿Serían diferente' los hechos?",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-4", start: 13.7, end: 18, type: "lyric",
+    id: "vit-4", start: 192, end: 194.5, type: "lyric",
     content: "Me imagino yo acosta'o en tu pecho",
     style: "romantic", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-5", start: 18.2, end: 22, type: "lyric",
+    id: "vit-5", start: 195, end: 197, type: "lyric",
     content: "Después de haber tocado el techo, bebé",
     style: "romantic", animation: "glow", position: "center-bar", feature: true,
   },
 
   // HOOK
   {
-    id: "vit-6", start: 22.5, end: 25, type: "lyric",
+    id: "vit-6", start: 197.8, end: 198.7, type: "lyric",
     content: "Tú y yo",
     style: "urban", animation: "fade", position: "center-bar",
   },
   {
-    id: "vit-7", start: 25.2, end: 30, type: "lyric",
+    id: "vit-7", start: 199.5, end: 201.8, type: "lyric",
     content: "Acostado' en la playa viendo caer el Sol",
     style: "urban", animation: "fade", position: "center-bar",
   },
