@@ -163,21 +163,21 @@ export default function IntroScreen({ onStart }) {
 
           {/* FASE 2 */}
           {phase === 'msg2' && (
-            <p className={`intro-msg ${vis}`}>
+            <p className={`intro-msg intro-msg--lg ${vis}`}>
               Espero que te guste la musica del caribe...
             </p>
           )}
 
           {/* FASE 3 */}
           {phase === 'msg3' && (
-            <p className={`intro-msg ${vis}`}>
+            <p className={`intro-msg intro-msg--lg ${vis}`}>
               este video tiene 6 canciones
             </p>
           )}
 
           {/* FASE 4 */}
           {phase === 'msg4' && (
-            <p className={`intro-msg ${vis}`}>
+            <p className={`intro-msg intro-msg--lg ${vis}`}>
               como es un poco largo <br />tienes un par de botones para jugar
             </p>
           )}
@@ -185,7 +185,7 @@ export default function IntroScreen({ onStart }) {
           {/* FASE 5 — Dos líneas */}
           {phase === 'msg5' && (
             <div className="intro-duo">
-              <p className={`intro-msg ${vis}`}>
+              <p className={`intro-msg intro-msg--lg ${vis}`}>
                 tambien algo de compañia
               </p>
               <p className={`intro-msg intro-msg--signature ${vis2}`}>
