@@ -359,7 +359,7 @@ export const timeline = [
   // Lyrics de Vitamina (canta desde 2:58)
 
   {
-    id: "vit-1", start: 177,3, end: 183, type: "lyric",
+    id: "vit-1", start: 177.3, end: 183, type: "lyric",
     content: "¿Qué hubiera pasado si tú y yo hubiésemos seguido esos besos?",
     style: "romantic", animation: "fade", position: "center-bar",
   },
