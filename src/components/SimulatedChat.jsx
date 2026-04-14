@@ -279,8 +279,8 @@ export default function SimulatedChat({
         </div>
       )}
 
-      {/* ── Mensajes ─────────────────────────────────────── */}
-      <div className="chat-messages">
+      {useMemo(() => (
+        <div className="chat-messages">
         {messages.map((msg, idx) => {
           const age      = total - idx - 1;
           const fadeClass =
@@ -383,8 +383,10 @@ export default function SimulatedChat({
 
         <div ref={bottomRef} />
       </div>
+      ), [messages, msgReactions, jReactions, msgReadReceipts, reactionTarget, typingState, miniGameTyping, activeMiniGame, senderConfig])}
 
       {/* ── INPUT ─── SIEMPRE VISIBLE ────────────────────── */}
+      {useMemo(() => (
       <div className="chat-input-area" onClick={e => e.stopPropagation()}>
 
         {/* Chips de sugerencia del prompt activo */}
@@ -482,6 +484,7 @@ export default function SimulatedChat({
           >➤</button>
         </div>
       </div>
+      ), [suggestions, inputValue, showEmojiPanel, showStickerPanel, activePrompt, userReplies])}
     </div>
   );
 }
