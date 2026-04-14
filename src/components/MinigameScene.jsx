@@ -9,7 +9,7 @@ import React, { useEffect, useRef } from 'react';
  * - El chat brilla con un efecto sutil
  * - Texto de "🎮 Minijuego" aparece con animación
  */
-export default function MinigameScene({ isActive }) {
+const MinigameScene = ({ isActive }) => {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const particlesRef = useRef([]);
@@ -126,9 +126,11 @@ export default function MinigameScene({ isActive }) {
       />
       <div className="minigame-scene-overlay">
         <div className="minigame-badge">
-          <span className="minigame-badge-text">🎮 Minijuego</span>
+          <span className="minigame-badge-text">💬 Elige 3 preguntas</span>
         </div>
       </div>
     </>
   );
 }
+
+export default React.memo(MinigameScene);

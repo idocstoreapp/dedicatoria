@@ -10,7 +10,7 @@ import React, { useEffect, useRef, useState } from 'react';
  *   fade | zoom | slide | bounce | theater
  *   snake-loop | rainbow | glow | aura | arc
  */
-export default function LyricDisplay({ lyric }) {
+const LyricDisplay = ({ lyric }) => {
   const [displayed, setDisplayed] = useState(null);
   const [phase,     setPhase]     = useState('idle');
   const textRef        = useRef(null);
@@ -105,3 +105,5 @@ export default function LyricDisplay({ lyric }) {
     </div>
   );
 }
+
+export default React.memo(LyricDisplay);

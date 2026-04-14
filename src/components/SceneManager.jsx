@@ -8,7 +8,7 @@ import { scenes as scenesConfig } from '../config/scenesConfig.js';
  *   activeScene → string, id de la escena activa
  *   hasVideo    → boolean, si hay video real (omite el fondo sólido para no tapar el video)
  */
-export default function SceneManager({ activeScene, hasVideo = false }) {
+const SceneManager = ({ activeScene, hasVideo = false }) => {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
   const particlesRef = useRef([]);
@@ -98,6 +98,7 @@ export default function SceneManager({ activeScene, hasVideo = false }) {
   );
 }
 
+export default React.memo(SceneManager);
 // ─── HELPERS DE PARTÍCULAS ────────────────────────────────────
 
 function createParticle(config, w, h, index) {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { getGeminiResponse } from '../utils/groq-ai.js';
 
 /**
  * ChatMiniGame — Minijuego "elige N de M" en el chat
@@ -66,59 +67,67 @@ export default function ChatMiniGame({ game, onMessage, onTyping }) {
     }
   }, [showButtons, responding]);
 
-  const handleChoose = useCallback((option) => {
+  const handleChoose = useCallback(async (option) => {
     if (done || responding) return;
 
     const newChosen = [...chosen, option.id];
     setChosen(newChosen);
     setResponding(true); // ocultar opciones inmediatamente
 
+    const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
     // Burbuja de ella eligiendo
     onMessage?.({ id: `mg-pick-${game.id}-${option.id}`, from: 'user', text: option.label });
 
-    // Iniciar indicador de "escribiendo..." de J
-    setTimeout(() => {
+    await sleep(600);
+    onTyping?.(true); // Iniciar indicador de "escribiendo..." de J
+
+    // Preparar el prompt para la IA
+    const prompt = `Eres J., una chica misteriosa y sutil que está viendo un video musical (Dany Ocean Casaparlante) en tiempo real con quien le envió esta dedicatoria. ÉL (o ELLA) acaba de apretar el botón preguntándote: "${option.label}". 
+    Tú ibas a responder originalmente: "${option.answer}". 
+    En base a eso, dame una respuesta muy similar de 1 sola frase corta, casual, romántica pero sutil y misteriosa, como en un chat de WhatsApp (usa todo en minúsculas, emojis sutiles, sé breve y directa).`;
+
+    const start = Date.now();
+    let finalAnswer = option.answer; // Fallback
+    try {
+      const res = await getGeminiResponse(prompt);
+      if (res) finalAnswer = res;
+    } catch (e) {
+      console.warn("AI Falló, usando default", e);
+    }
+
+    // Forzar que escriba por al menos 3.5 segundos para conservar realismo
+    const elapsed = Date.now() - start;
+    if (elapsed < 3500) await sleep(3500 - elapsed);
+    
+    onTyping?.(false);
+    onMessage?.({ id: `mg-ans-${game.id}-${option.id}`, from: 'j', text: finalAnswer });
+
+    const left = game.maxChoices - newChosen.length;
+    if (left > 0) {
+      await sleep(1200);
       onTyping?.(true);
-    }, 600);
-
-    // J. responde tras un delay más largo (ej. 3.5s)
-    setTimeout(() => {
+      await sleep(2000);
       onTyping?.(false);
-      onMessage?.({ id: `mg-ans-${game.id}-${option.id}`, from: 'j', text: option.answer });
-
-      const left = game.maxChoices - newChosen.length;
-      if (left > 0) {
-        // J. vuelve a escribir para decir las opciones que quedan
-        setTimeout(() => {
-          onTyping?.(true);
-        }, 1200);
-
-        setTimeout(() => {
-          onTyping?.(false);
-          let leftMsg = left === 1 
-            ? '...te queda 1 sola — piénsala bien 💭' 
-            : `te quedan ${left} — elige otra 😌`;
-          
-          onMessage?.({ id: `mg-left-${game.id}-${option.id}`, from: 'j', text: leftMsg });
-          
-          // Dar tiempo suficiente para leer el mensaje antes de re-mostrar botones
-          setTimeout(() => setResponding(false), 2500);
-        }, 3200);
-      } else {
-        // Sin opciones → mensaje final + cerrar
-        setTimeout(() => {
-          onTyping?.(true);
-        }, 1500);
-
-        setTimeout(() => {
-          onTyping?.(false);
-          const endMsg = game.endMessage || 'eso era todo lo que quería que supieras 🌹';
-          onMessage?.({ id: `mg-end-${game.id}`, from: 'j', text: endMsg });
-          setDone(true);
-          setResponding(false);
-        }, 4000);
-      }
-    }, 4100);
+      
+      let leftMsg = left === 1 
+        ? '...te queda 1 sola — piénsala bien 💭' 
+        : `te quedan ${left} — elige otra 😌`;
+      
+      onMessage?.({ id: `mg-left-${game.id}-${option.id}`, from: 'j', text: leftMsg });
+      
+      await sleep(2500);
+      setResponding(false); // volver a mostrar opciones
+    } else {
+      await sleep(1500);
+      onTyping?.(true);
+      await sleep(2500);
+      onTyping?.(false);
+      const endMsg = game.endMessage || 'eso era todo lo que quería que supieras 🌹';
+      onMessage?.({ id: `mg-end-${game.id}`, from: 'j', text: endMsg });
+      setDone(true);
+      setResponding(false);
+    }
   }, [chosen, done, responding, game, onMessage, onTyping]);
 
   // No renderizar nada si: no hay juego, terminó, no envió intro todavía, o los botones aún no deben verse

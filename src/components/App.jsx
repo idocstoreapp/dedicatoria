@@ -155,10 +155,14 @@ export default function App() {
     });
   }, []);
 
-  // ─── LIKES ───────────────────────────────────────────────
+  // ─── EFFECTS / LIKES / INTERACTIONS ──────────────────────
+  const handleEffectDone = useCallback(() => setActiveEffect(null), []);
+  const handleVideoError = useCallback(() => setVideoError(true), []);
+  const handleInteractionAnswer = useCallback((answer, interaction) => {
+    console.log('Respuesta:', answer, interaction.id);
+  }, []);
+
   const handleLike = useCallback((count) => setLikeCount(count), []);
-
-
   // ─── INTRO → PLAYER ──────────────────────────────────────
   // El video ya fue precargado en el fondo durante la intro.
   // Solo debemos llamar play() — el video ya está en el DOM.
@@ -245,7 +249,7 @@ export default function App() {
             muted={view === 'intro' || videoConfig.muted}
             onTimeUpdate={handleTimeUpdate}
             onReady={handleVideoReady}
-            onError={() => setVideoError(true)}
+            onError={handleVideoError}
           />
         </div>
 
@@ -271,7 +275,7 @@ export default function App() {
             <OverlayEffects
               overlays={activeOverlays}
               activeEffect={activeEffect}
-              onEffectDone={() => setActiveEffect(null)}
+              onEffectDone={handleEffectDone}
               containerRef={containerRef}
             />
           </div>
@@ -292,9 +296,7 @@ export default function App() {
           <div className="layer-interactions">
             <InteractionOverlay
               interaction={activeInteraction}
-              onAnswer={(answer, interaction) => {
-                console.log('Respuesta:', answer, interaction.id);
-              }}
+              onAnswer={handleInteractionAnswer}
             />
           </div>
         )}

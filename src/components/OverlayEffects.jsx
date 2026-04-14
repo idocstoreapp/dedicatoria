@@ -10,7 +10,7 @@ import React, { useEffect, useRef } from 'react';
  *   onEffectDone → callback cuando el efecto termina
  *   containerRef → ref del contenedor principal para shake
  */
-export default function OverlayEffects({ overlays = [], activeEffect, onEffectDone, containerRef }) {
+const OverlayEffects = ({ overlays = [], activeEffect, onEffectDone, containerRef }) => {
   const flashRef = useRef(null);
 
   // Efecto FLASH
@@ -54,8 +54,9 @@ export default function OverlayEffects({ overlays = [], activeEffect, onEffectDo
       ))}
     </>
   );
-}
+};
 
+export default React.memo(OverlayEffects);
 // ─── ITEM INDIVIDUAL ─────────────────────────────────────────
 
 function OverlayItem({ src, position, size }) {

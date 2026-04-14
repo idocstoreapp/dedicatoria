@@ -13,7 +13,7 @@ import React, { useState, useEffect, useRef } from 'react';
  *   { id, start, end, type:"tour", target:"id-del-elemento",
  *     tip: "texto de ayuda", tipPosition: "left"|"right"|"bottom"|"top" }
  */
-export default function TourSpotlight({ tourEvent, containerRef }) {
+const TourSpotlight = ({ tourEvent, containerRef }) => {
   const [pos, setPos] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -100,3 +100,5 @@ export default function TourSpotlight({ tourEvent, containerRef }) {
     </div>
   );
 }
+
+export default React.memo(TourSpotlight);

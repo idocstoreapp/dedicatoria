@@ -12,7 +12,7 @@ import React, { useState, useEffect, useRef } from 'react';
  *   interaction → objeto del evento activo (o null)
  *   onAnswer    (answer, interaction) → callback al responder
  */
-export default function InteractionOverlay({ interaction, onAnswer }) {
+const InteractionOverlay = ({ interaction, onAnswer }) => {
   const [answered, setAnswered] = useState(null);
   const [dismissed, setDismissed] = useState(false);
   const prevIdRef = useRef(null);
@@ -114,3 +114,5 @@ export default function InteractionOverlay({ interaction, onAnswer }) {
 
   return null;
 }
+
+export default React.memo(InteractionOverlay);

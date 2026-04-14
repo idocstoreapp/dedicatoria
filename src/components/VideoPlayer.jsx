@@ -25,9 +25,15 @@ const VideoPlayer = forwardRef(function VideoPlayer(
     // Especialmente útil en Safari/iOS donde preload puede ser más conservador.
     video.load();
 
-    const tick = () => {
-      if (video && !video.paused && !video.ended) {
-        onTimeUpdate?.(video.currentTime);
+    let lastTick = 0;
+    const tick = (timestamp) => {
+      // Throttle a ~20 FPS (50ms) para evitar matar el render tree de React 
+      // en pantallas móviles de 60Hz o 120Hz.
+      if (!lastTick || timestamp - lastTick >= 50) {
+        if (video && !video.paused && !video.ended) {
+          onTimeUpdate?.(video.currentTime);
+        }
+        lastTick = timestamp;
       }
       rafRef.current = requestAnimationFrame(tick);
     };
@@ -74,4 +80,4 @@ const VideoPlayer = forwardRef(function VideoPlayer(
   );
 });
 
-export default VideoPlayer;
+export default React.memo(VideoPlayer);

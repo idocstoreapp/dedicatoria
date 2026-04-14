@@ -11,26 +11,25 @@ import React from 'react';
  *   beatEvent → { color, colorB, bpm, intensity } | null
  */
 export default function BeatZones({ beatEvent }) {
-  // Inyectamos CSS custom properties en el :root para que el CSS
-  // animado pueda acceder a ellos sin inline styles en el player-container
-  if (!beatEvent) {
-    // Limpiar variables
-    document.documentElement.style.removeProperty('--beat-color');
-    document.documentElement.style.removeProperty('--beat-color-b');
-    document.documentElement.style.removeProperty('--beat-pulse-dur');
-    document.documentElement.style.removeProperty('--beat-intensity');
-    document.documentElement.classList.remove('beat-active');
-    return null;
-  }
+  React.useEffect(() => {
+    if (!beatEvent) {
+      document.documentElement.style.removeProperty('--beat-color');
+      document.documentElement.style.removeProperty('--beat-color-b');
+      document.documentElement.style.removeProperty('--beat-pulse-dur');
+      document.documentElement.style.removeProperty('--beat-intensity');
+      document.documentElement.classList.remove('beat-active');
+      return;
+    }
 
-  const bpm      = beatEvent.bpm       || 90;
-  const pulseDur = `${(60 / bpm).toFixed(2)}s`;
+    const bpm      = beatEvent.bpm       || 90;
+    const pulseDur = `${(60 / bpm).toFixed(2)}s`;
 
-  document.documentElement.style.setProperty('--beat-color',     beatEvent.color  || '#ff4488');
-  document.documentElement.style.setProperty('--beat-color-b',   beatEvent.colorB || beatEvent.color || '#8800ff');
-  document.documentElement.style.setProperty('--beat-pulse-dur', pulseDur);
-  document.documentElement.style.setProperty('--beat-intensity', beatEvent.intensity || 0.5);
-  document.documentElement.classList.add('beat-active');
+    document.documentElement.style.setProperty('--beat-color',     beatEvent.color  || '#ff4488');
+    document.documentElement.style.setProperty('--beat-color-b',   beatEvent.colorB || beatEvent.color || '#8800ff');
+    document.documentElement.style.setProperty('--beat-pulse-dur', pulseDur);
+    document.documentElement.style.setProperty('--beat-intensity', beatEvent.intensity || 0.5);
+    document.documentElement.classList.add('beat-active');
+  }, [beatEvent]);
 
   return null; // El efecto lo hace el CSS en .player-container.beat-active
 }

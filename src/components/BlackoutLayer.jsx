@@ -9,7 +9,7 @@ import React from 'react';
  *   → El negro cubre video, escenas y overlays
  *   → El texto (lyrics) y los controles se ven encima del negro ✓
  */
-export default function BlackoutLayer({ isActive }) {
+const BlackoutLayer = ({ isActive }) => {
   return (
     <div
       aria-hidden="true"
@@ -26,3 +26,5 @@ export default function BlackoutLayer({ isActive }) {
     />
   );
 }
+
+export default React.memo(BlackoutLayer);

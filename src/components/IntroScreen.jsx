@@ -16,7 +16,7 @@ import React, { useState, useEffect, useRef } from 'react';
 const HOLD = 2500;
 const FADE = 600;   // duración CSS de la animación de fade
 
-export default function IntroScreen({ onStart }) {
+const IntroScreen = ({ onStart }) => {
   // Cada fase es un estado del "carrusel de mensajes"
   // 'typewrite' | 'msg2' | 'msg3' | 'msg4' | 'button'
   const [phase, setPhase] = useState('typewrite');
@@ -215,3 +215,5 @@ export default function IntroScreen({ onStart }) {
     </div>
   );
 }
+
+export default React.memo(IntroScreen);
