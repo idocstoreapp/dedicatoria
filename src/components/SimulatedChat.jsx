@@ -263,132 +263,127 @@ export default function SimulatedChat({
     !inputValue || s.toLowerCase().includes(inputValue.toLowerCase())
   );
 
-  // Chat visible si: la experiencia empezó (prop) O hay mensajes O hay typing
-  const chatActive = visible || messages.length > 0 || typingState !== 'none';
-  if (!chatActive) return null;
+  const renderedMessages = useMemo(() => {
+    const total = messages.length;
+    return (
+      <>
+        {/* Tip de reacción */}
+        {showReactionTip && (
+          <div className="chat-reaction-tip">
+            💫 mantén presionado un mensaje para reaccionar
+          </div>
+        )}
 
-  const total = messages.length;
-
-  return (
-    <div className="chat-panel" id="chat-panel" onClick={e => e.stopPropagation()}>
-
-      {/* Tip de reacción */}
-      {showReactionTip && (
-        <div className="chat-reaction-tip">
-          💫 mantén presionado un mensaje para reaccionar
-        </div>
-      )}
-
-      {useMemo(() => (
         <div className="chat-messages">
-        {messages.map((msg, idx) => {
-          const age      = total - idx - 1;
-          const fadeClass =
-            age >= MAX_VISIBLE     ? 'chat-bubble--hidden' :
-            age === MAX_VISIBLE-1  ? 'chat-bubble--faded'  : '';
-          const isJ          = msg.from === 'j';
-          const myReaction   = msgReactions[msg.id];
-          const jsReaction   = jReactions[msg.id];
-          const isReacting   = reactionTarget === msg.id;
+          {messages.map((msg, idx) => {
+            const age      = total - idx - 1;
+            const fadeClass =
+              age >= MAX_VISIBLE     ? 'chat-bubble--hidden' :
+              age === MAX_VISIBLE-1  ? 'chat-bubble--faded'  : '';
+            const isJ          = msg.from === 'j';
+            const myReaction   = msgReactions[msg.id];
+            const jsReaction   = jReactions[msg.id];
+            const isReacting   = reactionTarget === msg.id;
 
-          return (
-            <div key={msg.id} className={`chat-bubble-row ${msg.from === 'user' ? 'chat-bubble-row--right' : ''}`}>
+            return (
+              <div key={msg.id} className={`chat-bubble-row ${msg.from === 'user' ? 'chat-bubble-row--right' : ''}`}>
 
-              {/* Reaction picker — stopPropagation aquí protege del doc-click */}
-              {isReacting && (
-                <div
-                  className={`chat-reaction-picker ${msg.from === 'user' ? 'chat-reaction-picker--right' : ''}`}
-                  onClick={e => e.stopPropagation()}
-                >
-                  {REACTION_OPTIONS.map(em => (
-                    <button
-                      key={em}
-                      className={`chat-react-option ${myReaction === em ? 'active' : ''}`}
-                      onClick={e => handleReact(msg.id, em, e)}
-                    >{em}</button>
-                  ))}
-                </div>
-              )}
-
-              {/* Burbuja */}
-              <div
-                className={`chat-bubble ${isJ ? 'chat-bubble--j' : 'chat-bubble--user'} ${fadeClass}`}
-                onMouseDown={() => handlePressStart(msg.id)}
-                onMouseUp={handlePressEnd}
-                onTouchStart={() => handlePressStart(msg.id)}
-                onTouchEnd={handlePressEnd}
-                onContextMenu={e => { e.preventDefault(); handlePressStart(msg.id); }}
-              >
-                {isJ && (
-                  <div className="chat-avatar-wrap">
-                    {senderConfig?.photo
-                      ? <img src={senderConfig.photo} className="chat-avatar" alt="" />
-                      : <div className="chat-avatar chat-avatar--placeholder">{senderConfig?.initial || 'J'}</div>
-                    }
+                {/* Reaction picker — stopPropagation aquí protege del doc-click */}
+                {isReacting && (
+                  <div
+                    className={`chat-reaction-picker ${msg.from === 'user' ? 'chat-reaction-picker--right' : ''}`}
+                    onClick={e => e.stopPropagation()}
+                  >
+                    {REACTION_OPTIONS.map(em => (
+                      <button
+                        key={em}
+                        className={`chat-react-option ${myReaction === em ? 'active' : ''}`}
+                        onClick={e => handleReact(msg.id, em, e)}
+                      >{em}</button>
+                    ))}
                   </div>
                 )}
+
+                {/* Burbuja */}
+                <div
+                  className={`chat-bubble ${isJ ? 'chat-bubble--j' : 'chat-bubble--user'} ${fadeClass}`}
+                  onMouseDown={() => handlePressStart(msg.id)}
+                  onMouseUp={handlePressEnd}
+                  onTouchStart={() => handlePressStart(msg.id)}
+                  onTouchEnd={handlePressEnd}
+                  onContextMenu={e => { e.preventDefault(); handlePressStart(msg.id); }}
+                >
+                  {isJ && (
+                    <div className="chat-avatar-wrap">
+                      {senderConfig?.photo
+                        ? <img src={senderConfig.photo} className="chat-avatar" alt="" />
+                        : <div className="chat-avatar chat-avatar--placeholder">{senderConfig?.initial || 'J'}</div>
+                      }
+                    </div>
+                  )}
+                  <div className="chat-content">
+                    {isJ && <span className="chat-name">{senderConfig?.name || 'J.'}</span>}
+                    {msg.type === 'sticker' ? (
+                      <img src={msg.src} alt="sticker" className="chat-sticker-img" />
+                    ) : (
+                      <p className="chat-text">{msg.text}</p>
+                    )}
+                    {myReaction && <span className="chat-reaction chat-reaction--hers">{myReaction}</span>}
+                    {jsReaction && <span className="chat-reaction chat-reaction--j">{jsReaction}</span>}
+                    {/* Read receipts para mensajes del usuario */}
+                    {!isJ && msgReadReceipts[msg.id] && (
+                      <span className="chat-read-receipt">✓✓</span>
+                    )}
+                    {!isJ && !msgReadReceipts[msg.id] && (
+                      <span className="chat-read-receipt chat-read-receipt--sent">✓</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Alerta primer mensaje */}
+          {typingState === 'first-alert' && (
+            <div className="chat-first-alert">
+              <div className="chat-first-alert-dot" />
+              <span>alguien está enviando un mensaje...</span>
+            </div>
+          )}
+
+          {/* Typing normal */}
+          {(typingState === 'typing' || miniGameTyping) && (
+            <div className="chat-bubble-row">
+              <div className="chat-bubble chat-bubble--j">
+                <div className="chat-avatar-wrap">
+                  {senderConfig?.photo
+                    ? <img src={senderConfig.photo} className="chat-avatar" alt="" />
+                    : <div className="chat-avatar chat-avatar--placeholder">{senderConfig?.initial || 'J'}</div>
+                  }
+                </div>
                 <div className="chat-content">
-                  {isJ && <span className="chat-name">{senderConfig?.name || 'J.'}</span>}
-                  {msg.type === 'sticker' ? (
-                    <img src={msg.src} alt="sticker" className="chat-sticker-img" />
-                  ) : (
-                    <p className="chat-text">{msg.text}</p>
-                  )}
-                  {myReaction && <span className="chat-reaction chat-reaction--hers">{myReaction}</span>}
-                  {jsReaction && <span className="chat-reaction chat-reaction--j">{jsReaction}</span>}
-                  {/* Read receipts para mensajes del usuario */}
-                  {!isJ && msgReadReceipts[msg.id] && (
-                    <span className="chat-read-receipt">✓✓</span>
-                  )}
-                  {!isJ && !msgReadReceipts[msg.id] && (
-                    <span className="chat-read-receipt chat-read-receipt--sent">✓</span>
-                  )}
+                  <div className="chat-typing-dots"><span /><span /><span /></div>
                 </div>
               </div>
             </div>
-          );
-        })}
+          )}
 
-        {/* Alerta primer mensaje */}
-        {typingState === 'first-alert' && (
-          <div className="chat-first-alert">
-            <div className="chat-first-alert-dot" />
-            <span>alguien está enviando un mensaje...</span>
-          </div>
-        )}
+          {/* ── MINIJUEGO INYECTADO AQUÍ ── */}
+          <ChatMiniGame
+            game={activeMiniGame}
+            onMessage={addDirectMessage}
+            onTyping={setMiniGameTyping}
+          />
 
-        {/* Typing normal */}
-        {(typingState === 'typing' || miniGameTyping) && (
-          <div className="chat-bubble-row">
-            <div className="chat-bubble chat-bubble--j">
-              <div className="chat-avatar-wrap">
-                {senderConfig?.photo
-                  ? <img src={senderConfig.photo} className="chat-avatar" alt="" />
-                  : <div className="chat-avatar chat-avatar--placeholder">{senderConfig?.initial || 'J'}</div>
-                }
-              </div>
-              <div className="chat-content">
-                <div className="chat-typing-dots"><span /><span /><span /></div>
-              </div>
-            </div>
-          </div>
-        )}
+          <div ref={bottomRef} />
+        </div>
+      </>
+    );
+  }, [messages, msgReactions, jReactions, msgReadReceipts, reactionTarget, typingState, miniGameTyping, activeMiniGame, senderConfig, showReactionTip]);
 
-        {/* ── MINIJUEGO INYECTADO AQUÍ ── */}
-        <ChatMiniGame
-          game={activeMiniGame}
-          onMessage={addDirectMessage}
-          onTyping={setMiniGameTyping}
-        />
-
-        <div ref={bottomRef} />
-      </div>
-      ), [messages, msgReactions, jReactions, msgReadReceipts, reactionTarget, typingState, miniGameTyping, activeMiniGame, senderConfig])}
-
-      {/* ── INPUT ─── SIEMPRE VISIBLE ────────────────────── */}
-      {useMemo(() => (
+  const renderedInputArea = useMemo(() => {
+    return (
       <div className="chat-input-area" onClick={e => e.stopPropagation()}>
-
         {/* Chips de sugerencia del prompt activo */}
         {suggestions.length > 0 && (
           <div className="chat-suggestions">
@@ -484,7 +479,17 @@ export default function SimulatedChat({
           >➤</button>
         </div>
       </div>
-      ), [suggestions, inputValue, showEmojiPanel, showStickerPanel, activePrompt, userReplies])}
+    );
+  }, [suggestions, inputValue, showEmojiPanel, showStickerPanel, activePrompt, userReplies]);
+
+  // Chat visible si: la experiencia empezó (prop) O hay mensajes O hay typing
+  const chatActive = visible || messages.length > 0 || typingState !== 'none';
+  if (!chatActive) return null;
+
+  return (
+    <div className="chat-panel" id="chat-panel" onClick={e => e.stopPropagation()}>
+      {renderedMessages}
+      {renderedInputArea}
     </div>
   );
 }
