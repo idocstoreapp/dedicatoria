@@ -11,11 +11,11 @@ import { getGeminiResponse } from '../utils/groq-ai.js';
  *  4. Si no quedan → mensaje de cierre + done
  */
 export default function ChatMiniGame({ game, onMessage, onTyping }) {
-  const [chosen,       setChosen]       = useState([]);
-  const [done,         setDone]         = useState(false);
-  const [introSent,    setIntroSent]    = useState(false);
-  const [showButtons,  setShowButtons]  = useState(false); // controla cuándo aparecen los botones
-  const [responding,   setResponding]   = useState(false); // oculta panel mientras J. habla
+  const [chosen, setChosen] = useState([]);
+  const [done, setDone] = useState(false);
+  const [introSent, setIntroSent] = useState(false);
+  const [showButtons, setShowButtons] = useState(false); // controla cuándo aparecen los botones
+  const [responding, setResponding] = useState(false); // oculta panel mientras J. habla
   const prevGameId = useRef(null);
 
   // Reset al cambiar de juego
@@ -35,7 +35,7 @@ export default function ChatMiniGame({ game, onMessage, onTyping }) {
   // Enviar intro de J. al activarse el minijuego
   useEffect(() => {
     if (!game || introSent) return;
-    
+
     const delay = setTimeout(() => {
       setIntroSent(true);
       onMessage?.({
@@ -44,7 +44,7 @@ export default function ChatMiniGame({ game, onMessage, onTyping }) {
         text: game.intro || 'elige una opción 🌹',
       });
     }, 700);
-    
+
     return () => clearTimeout(delay);
   }, [game?.id, introSent, game?.intro, onMessage]);
 
@@ -99,7 +99,7 @@ export default function ChatMiniGame({ game, onMessage, onTyping }) {
     // Forzar que escriba por al menos 3.5 segundos para conservar realismo
     const elapsed = Date.now() - start;
     if (elapsed < 3500) await sleep(3500 - elapsed);
-    
+
     onTyping?.(false);
     onMessage?.({ id: `mg-ans-${game.id}-${option.id}`, from: 'j', text: finalAnswer });
 
@@ -109,13 +109,13 @@ export default function ChatMiniGame({ game, onMessage, onTyping }) {
       onTyping?.(true);
       await sleep(2000);
       onTyping?.(false);
-      
-      let leftMsg = left === 1 
-        ? '...te queda 1 sola — piénsala bien 💭' 
+
+      let leftMsg = left === 1
+        ? '...te queda 1 sola — piénsala bien 💭'
         : `te quedan ${left} — elige otra 😌`;
-      
+
       onMessage?.({ id: `mg-left-${game.id}-${option.id}`, from: 'j', text: leftMsg });
-      
+
       await sleep(2500);
       setResponding(false); // volver a mostrar opciones
     } else {
@@ -137,8 +137,8 @@ export default function ChatMiniGame({ game, onMessage, onTyping }) {
   if (responding) return null;
 
   const maxChoices = game.maxChoices || 3;
-  const remaining  = maxChoices - chosen.length;
-  const available  = (game.options || []).filter(o => !chosen.includes(o.id));
+  const remaining = maxChoices - chosen.length;
+  const available = (game.options || []).filter(o => !chosen.includes(o.id));
 
   if (available.length === 0) return null;
 

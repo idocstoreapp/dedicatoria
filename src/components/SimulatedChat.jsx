@@ -3,17 +3,17 @@ import ChatMiniGame from './ChatMiniGame.jsx';
 import { getGeminiResponse, getTypingDurationAI, maybeGetDoubleMessage } from '../utils/groq-ai.js';
 import { getAIResponse as getOfflineResponse } from '../utils/chat-ai-response.js';
 
-const TYPING_LEAD    = 2;     // fallback: si no usamos AI, 2s antes del mensaje del timeline
-const MAX_VISIBLE    = 4;
-const LONG_PRESS_MS  = 520;
+const TYPING_LEAD = 2;     // fallback: si no usamos AI, 2s antes del mensaje del timeline
+const MAX_VISIBLE = 4;
+const LONG_PRESS_MS = 520;
 
 const REACTION_OPTIONS = ['❤️', '😂', '😮', '😢', '🔥', '👏', '🫶', '💯'];
 
 const EMOJI_LIST = [
-  '❤️','🧡','💛','💙','💜','🖤','🤍','💕',
-  '😊','🥰','😍','😂','😭','🥺','😏','😘',
-  '🔥','💯','✨','🎵','🌹','💐','🌊','🫶',
-  '👏','🙌','💪','🤝','🎶','❤️‍🔥','💖','🙈',
+  '❤️', '🧡', '💛', '💙', '💜', '🖤', '🤍', '💕',
+  '😊', '🥰', '😍', '😂', '😭', '🥺', '😏', '😘',
+  '🔥', '💯', '✨', '🎵', '🌹', '💐', '🌊', '🫶',
+  '👏', '🙌', '💪', '🤝', '🎶', '❤️‍🔥', '💖', '🙈',
 ];
 
 const STICKER_LIST = [
@@ -25,29 +25,29 @@ const STICKER_LIST = [
 export default function SimulatedChat({
   chatEvents = [], currentTime, senderConfig, visible = false, activeMiniGame, onMinigameMessage, currentSong = null, onNewMessage
 }) {
-  const [messages,        setMessages]        = useState([]);
-  const [userReplies,     setUserReplies]     = useState({});
-  const [msgReactions,    setMsgReactions]    = useState({});   // id → emoji (ella reacciona)
-  const [jReactions,      setJReactions]      = useState({});   // id → emoji (J. reacciona)
+  const [messages, setMessages] = useState([]);
+  const [userReplies, setUserReplies] = useState({});
+  const [msgReactions, setMsgReactions] = useState({});   // id → emoji (ella reacciona)
+  const [jReactions, setJReactions] = useState({});   // id → emoji (J. reacciona)
   const [msgReadReceipts, setMsgReadReceipts] = useState({});   // id → true (J. ya leyó el mensaje)
-  const [activePrompt,    setActivePrompt]    = useState(null);
-  const [inputValue,      setInputValue]      = useState('');
-  const [showEmojiPanel,  setShowEmojiPanel]  = useState(false);
-  const [showStickerPanel,setShowStickerPanel]= useState(false);
-  const [reactionTarget,  setReactionTarget]  = useState(null); // msgId
-  const [typingState,     setTypingState]     = useState('none'); // 'none'|'first-alert'|'typing'
-  const [miniGameTyping,  setMiniGameTyping]  = useState(false);
+  const [activePrompt, setActivePrompt] = useState(null);
+  const [inputValue, setInputValue] = useState('');
+  const [showEmojiPanel, setShowEmojiPanel] = useState(false);
+  const [showStickerPanel, setShowStickerPanel] = useState(false);
+  const [reactionTarget, setReactionTarget] = useState(null); // msgId
+  const [typingState, setTypingState] = useState('none'); // 'none'|'first-alert'|'typing'
+  const [miniGameTyping, setMiniGameTyping] = useState(false);
   const [showReactionTip, setShowReactionTip] = useState(false);
-  const [geminiFailed,    setGeminiFailed]    = useState(false);  // fallback activado si Gemini cae
+  const [geminiFailed, setGeminiFailed] = useState(false);  // fallback activado si Gemini cae
 
   // Refs para evitar closures stale en handleAIResponse
   const geminiFailedRef = useRef(geminiFailed);
-  const currentSongRef  = useRef(currentSong);
-  const messagesRef     = useRef(messages);
+  const currentSongRef = useRef(currentSong);
+  const messagesRef = useRef(messages);
 
   useEffect(() => { geminiFailedRef.current = geminiFailed; }, [geminiFailed]);
-  useEffect(() => { currentSongRef.current  = currentSong; }, [currentSong]);
-  useEffect(() => { messagesRef.current     = messages; }, [messages]);
+  useEffect(() => { currentSongRef.current = currentSong; }, [currentSong]);
+  useEffect(() => { messagesRef.current = messages; }, [messages]);
 
   // Callback directo para inyectar mensajes del minijuego sin filtro de tiempo
   const addDirectMessage = useCallback((msg) => {
@@ -57,16 +57,16 @@ export default function SimulatedChat({
     });
   }, []);
 
-  const addedRef         = useRef(new Set());
-  const bottomRef        = useRef(null);
-  const pressTimerRef    = useRef(null);
-  const blockDocClick    = useRef(false);      // bloquea el click del doc tras long-press
-  const inputRef         = useRef(null);
+  const addedRef = useRef(new Set());
+  const bottomRef = useRef(null);
+  const pressTimerRef = useRef(null);
+  const blockDocClick = useRef(false);      // bloquea el click del doc tras long-press
+  const inputRef = useRef(null);
   const reactionTipShown = useRef(false);
 
   const firstEvent = useMemo(() =>
     chatEvents.length ? [...chatEvents].sort((a, b) => a.start - b.start)[0] : null,
-  [chatEvents]);
+    [chatEvents]);
 
   // ── Procesar timeline ─────────────────────────────────────
   useEffect(() => {
@@ -151,15 +151,15 @@ export default function SimulatedChat({
 
     // ── Para prompts del timeline, usar conditionalReplies primero ──
     if (activePrompt && !userReplies[activePrompt.id] && !isSticker) {
-      const eventId  = activePrompt.id;
-      const replyId  = `${eventId}-reply`;
+      const eventId = activePrompt.id;
+      const replyId = `${eventId}-reply`;
       setUserReplies(prev => ({ ...prev, [eventId]: clean }));
       setActivePrompt(null);
       setMessages(prev => [...prev, { id: replyId, from: 'user', text: clean }]);
 
       const lower = clean.toLowerCase();
       const event = chatEvents.find(e => e.id === eventId);
-      let jReply  = null;
+      let jReply = null;
       if (event?.conditionalReplies) {
         for (const r of event.conditionalReplies) {
           if (r.match.some(kw => lower.includes(kw.toLowerCase()))) { jReply = r.response; break; }
@@ -263,127 +263,130 @@ export default function SimulatedChat({
     !inputValue || s.toLowerCase().includes(inputValue.toLowerCase())
   );
 
-  const renderedMessages = useMemo(() => {
-    const total = messages.length;
-    return (
-      <>
-        {/* Tip de reacción */}
-        {showReactionTip && (
-          <div className="chat-reaction-tip">
-            💫 mantén presionado un mensaje para reaccionar
+  // Chat visible si: la experiencia empezó (prop) O hay mensajes O hay typing
+  const chatActive = visible || messages.length > 0 || typingState !== 'none';
+  if (!chatActive) return null;
+
+  const total = messages.length;
+
+  return (
+    <div className="chat-panel" id="chat-panel" onClick={e => e.stopPropagation()}>
+
+      {/* Tip de reacción */}
+      {showReactionTip && (
+        <div className="chat-reaction-tip">
+          💫 mantén presionado un mensaje para reaccionar
+        </div>
+      )}
+
+      {/* ── Mensajes ─────────────────────────────────────── */}
+      <div className="chat-messages">
+        {messages.map((msg, idx) => {
+          const age = total - idx - 1;
+          const fadeClass =
+            age >= MAX_VISIBLE ? 'chat-bubble--hidden' :
+              age === MAX_VISIBLE - 1 ? 'chat-bubble--faded' : '';
+          const isJ = msg.from === 'j';
+          const myReaction = msgReactions[msg.id];
+          const jsReaction = jReactions[msg.id];
+          const isReacting = reactionTarget === msg.id;
+
+          return (
+            <div key={msg.id} className={`chat-bubble-row ${msg.from === 'user' ? 'chat-bubble-row--right' : ''}`}>
+
+              {/* Reaction picker — stopPropagation aquí protege del doc-click */}
+              {isReacting && (
+                <div
+                  className={`chat-reaction-picker ${msg.from === 'user' ? 'chat-reaction-picker--right' : ''}`}
+                  onClick={e => e.stopPropagation()}
+                >
+                  {REACTION_OPTIONS.map(em => (
+                    <button
+                      key={em}
+                      className={`chat-react-option ${myReaction === em ? 'active' : ''}`}
+                      onClick={e => handleReact(msg.id, em, e)}
+                    >{em}</button>
+                  ))}
+                </div>
+              )}
+
+              {/* Burbuja */}
+              <div
+                className={`chat-bubble ${isJ ? 'chat-bubble--j' : 'chat-bubble--user'} ${fadeClass}`}
+                onMouseDown={() => handlePressStart(msg.id)}
+                onMouseUp={handlePressEnd}
+                onTouchStart={() => handlePressStart(msg.id)}
+                onTouchEnd={handlePressEnd}
+                onContextMenu={e => { e.preventDefault(); handlePressStart(msg.id); }}
+              >
+                {isJ && (
+                  <div className="chat-avatar-wrap">
+                    {senderConfig?.photo
+                      ? <img src={senderConfig.photo} className="chat-avatar" alt="" />
+                      : <div className="chat-avatar chat-avatar--placeholder">{senderConfig?.initial || 'J'}</div>
+                    }
+                  </div>
+                )}
+                <div className="chat-content">
+                  {isJ && <span className="chat-name">{senderConfig?.name || 'J.'}</span>}
+                  {msg.type === 'sticker' ? (
+                    <img src={msg.src} alt="sticker" className="chat-sticker-img" />
+                  ) : (
+                    <p className="chat-text">{msg.text}</p>
+                  )}
+                  {myReaction && <span className="chat-reaction chat-reaction--hers">{myReaction}</span>}
+                  {jsReaction && <span className="chat-reaction chat-reaction--j">{jsReaction}</span>}
+                  {/* Read receipts para mensajes del usuario */}
+                  {!isJ && msgReadReceipts[msg.id] && (
+                    <span className="chat-read-receipt">✓✓</span>
+                  )}
+                  {!isJ && !msgReadReceipts[msg.id] && (
+                    <span className="chat-read-receipt chat-read-receipt--sent">✓</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Alerta primer mensaje */}
+        {typingState === 'first-alert' && (
+          <div className="chat-first-alert">
+            <div className="chat-first-alert-dot" />
+            <span>alguien está enviando un mensaje...</span>
           </div>
         )}
 
-        <div className="chat-messages">
-          {messages.map((msg, idx) => {
-            const age      = total - idx - 1;
-            const fadeClass =
-              age >= MAX_VISIBLE     ? 'chat-bubble--hidden' :
-              age === MAX_VISIBLE-1  ? 'chat-bubble--faded'  : '';
-            const isJ          = msg.from === 'j';
-            const myReaction   = msgReactions[msg.id];
-            const jsReaction   = jReactions[msg.id];
-            const isReacting   = reactionTarget === msg.id;
-
-            return (
-              <div key={msg.id} className={`chat-bubble-row ${msg.from === 'user' ? 'chat-bubble-row--right' : ''}`}>
-
-                {/* Reaction picker — stopPropagation aquí protege del doc-click */}
-                {isReacting && (
-                  <div
-                    className={`chat-reaction-picker ${msg.from === 'user' ? 'chat-reaction-picker--right' : ''}`}
-                    onClick={e => e.stopPropagation()}
-                  >
-                    {REACTION_OPTIONS.map(em => (
-                      <button
-                        key={em}
-                        className={`chat-react-option ${myReaction === em ? 'active' : ''}`}
-                        onClick={e => handleReact(msg.id, em, e)}
-                      >{em}</button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Burbuja */}
-                <div
-                  className={`chat-bubble ${isJ ? 'chat-bubble--j' : 'chat-bubble--user'} ${fadeClass}`}
-                  onMouseDown={() => handlePressStart(msg.id)}
-                  onMouseUp={handlePressEnd}
-                  onTouchStart={() => handlePressStart(msg.id)}
-                  onTouchEnd={handlePressEnd}
-                  onContextMenu={e => { e.preventDefault(); handlePressStart(msg.id); }}
-                >
-                  {isJ && (
-                    <div className="chat-avatar-wrap">
-                      {senderConfig?.photo
-                        ? <img src={senderConfig.photo} className="chat-avatar" alt="" />
-                        : <div className="chat-avatar chat-avatar--placeholder">{senderConfig?.initial || 'J'}</div>
-                      }
-                    </div>
-                  )}
-                  <div className="chat-content">
-                    {isJ && <span className="chat-name">{senderConfig?.name || 'J.'}</span>}
-                    {msg.type === 'sticker' ? (
-                      <img src={msg.src} alt="sticker" className="chat-sticker-img" />
-                    ) : (
-                      <p className="chat-text">{msg.text}</p>
-                    )}
-                    {myReaction && <span className="chat-reaction chat-reaction--hers">{myReaction}</span>}
-                    {jsReaction && <span className="chat-reaction chat-reaction--j">{jsReaction}</span>}
-                    {/* Read receipts para mensajes del usuario */}
-                    {!isJ && msgReadReceipts[msg.id] && (
-                      <span className="chat-read-receipt">✓✓</span>
-                    )}
-                    {!isJ && !msgReadReceipts[msg.id] && (
-                      <span className="chat-read-receipt chat-read-receipt--sent">✓</span>
-                    )}
-                  </div>
-                </div>
+        {/* Typing normal */}
+        {(typingState === 'typing' || miniGameTyping) && (
+          <div className="chat-bubble-row">
+            <div className="chat-bubble chat-bubble--j">
+              <div className="chat-avatar-wrap">
+                {senderConfig?.photo
+                  ? <img src={senderConfig.photo} className="chat-avatar" alt="" />
+                  : <div className="chat-avatar chat-avatar--placeholder">{senderConfig?.initial || 'J'}</div>
+                }
               </div>
-            );
-          })}
-
-          {/* Alerta primer mensaje */}
-          {typingState === 'first-alert' && (
-            <div className="chat-first-alert">
-              <div className="chat-first-alert-dot" />
-              <span>alguien está enviando un mensaje...</span>
-            </div>
-          )}
-
-          {/* Typing normal */}
-          {(typingState === 'typing' || miniGameTyping) && (
-            <div className="chat-bubble-row">
-              <div className="chat-bubble chat-bubble--j">
-                <div className="chat-avatar-wrap">
-                  {senderConfig?.photo
-                    ? <img src={senderConfig.photo} className="chat-avatar" alt="" />
-                    : <div className="chat-avatar chat-avatar--placeholder">{senderConfig?.initial || 'J'}</div>
-                  }
-                </div>
-                <div className="chat-content">
-                  <div className="chat-typing-dots"><span /><span /><span /></div>
-                </div>
+              <div className="chat-content">
+                <div className="chat-typing-dots"><span /><span /><span /></div>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {/* ── MINIJUEGO INYECTADO AQUÍ ── */}
-          <ChatMiniGame
-            game={activeMiniGame}
-            onMessage={addDirectMessage}
-            onTyping={setMiniGameTyping}
-          />
+        {/* ── MINIJUEGO INYECTADO AQUÍ ── */}
+        <ChatMiniGame
+          game={activeMiniGame}
+          onMessage={addDirectMessage}
+          onTyping={setMiniGameTyping}
+        />
 
-          <div ref={bottomRef} />
-        </div>
-      </>
-    );
-  }, [messages, msgReactions, jReactions, msgReadReceipts, reactionTarget, typingState, miniGameTyping, activeMiniGame, senderConfig, showReactionTip]);
+        <div ref={bottomRef} />
+      </div>
 
-  const renderedInputArea = useMemo(() => {
-    return (
+      {/* ── INPUT ─── SIEMPRE VISIBLE ────────────────────── */}
       <div className="chat-input-area" onClick={e => e.stopPropagation()}>
+
         {/* Chips de sugerencia del prompt activo */}
         {suggestions.length > 0 && (
           <div className="chat-suggestions">
@@ -401,9 +404,9 @@ export default function SimulatedChat({
             <button
               className="chat-emoji-btn"
               aria-label="Emojis"
-              onClick={e => { 
-                e.stopPropagation(); 
-                setShowEmojiPanel(p => !p); 
+              onClick={e => {
+                e.stopPropagation();
+                setShowEmojiPanel(p => !p);
                 setShowStickerPanel(false);
               }}
             >😊</button>
@@ -435,9 +438,9 @@ export default function SimulatedChat({
             <button
               className="chat-emoji-btn"
               aria-label="Stickers"
-              onClick={e => { 
-                e.stopPropagation(); 
-                setShowStickerPanel(p => !p); 
+              onClick={e => {
+                e.stopPropagation();
+                setShowStickerPanel(p => !p);
                 setShowEmojiPanel(false);
               }}
             >🖼️</button>
@@ -479,17 +482,6 @@ export default function SimulatedChat({
           >➤</button>
         </div>
       </div>
-    );
-  }, [suggestions, inputValue, showEmojiPanel, showStickerPanel, activePrompt, userReplies]);
-
-  // Chat visible si: la experiencia empezó (prop) O hay mensajes O hay typing
-  const chatActive = visible || messages.length > 0 || typingState !== 'none';
-  if (!chatActive) return null;
-
-  return (
-    <div className="chat-panel" id="chat-panel" onClick={e => e.stopPropagation()}>
-      {renderedMessages}
-      {renderedInputArea}
     </div>
   );
 }
