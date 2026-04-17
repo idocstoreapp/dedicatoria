@@ -10,13 +10,25 @@ import React, { useState, useEffect, useRef } from 'react';
  *  4. "Espero que te guste la música del Caribe." + "— J." (con delay entre sí)
  *     → ambos se quitan juntos
  *  5. Todo queda vacío un momento → aparece botón INICIAR
+import React, { useState, useEffect, useRef } from 'react';
+
+/**
+ * IntroScreen — Pantalla de inicio estilo créditos de película
+ *
+ * Secuencia:
+ *  1. "Hola chica linda..." → máquina de escribir → se quita
+ *  2. "Esto es una experiencia interactiva" → aparece → se quita
+ *  3. "hecha con mucho amor ❤️"            → aparece → se quita
+ *  4. "Espero que te guste la música del Caribe." + "— J." (con delay entre sí)
+ *     → ambos se quitan juntos
+ *  5. Todo queda vacío un momento → aparece botón INICIAR
  */
 
 // Duración que cada mensaje permanece visible antes de salir (ms)
 const HOLD = 2500;
 const FADE = 600;   // duración CSS de la animación de fade
 
-const IntroScreen = ({ onStart }) => {
+const IntroScreen = ({ onStart, onSkipToLibrary }) => {
   // Cada fase es un estado del "carrusel de mensajes"
   // 'typewrite' | 'msg2' | 'msg3' | 'msg4' | 'button'
   const [phase, setPhase] = useState('typewrite');
@@ -25,6 +37,7 @@ const IntroScreen = ({ onStart }) => {
   const [line2Vis, setLine2Vis] = useState(false);   // "— J." entra un poco después
   const [showBtn, setShowBtn] = useState(false);
   const [btnHovered, setBtnHovered] = useState(false);
+  const [showSkip, setShowSkip] = useState(false);   // botón de skip discreta
   const rootRef = useRef(null);
   const bgVideoRef = useRef(null);
 
@@ -38,6 +51,12 @@ const IntroScreen = ({ onStart }) => {
     };
     if (v.readyState >= 1) { seek(); }
     else { v.addEventListener('loadedmetadata', seek, { once: true }); }
+  }, []);
+
+  // ── Botón Skip: aparece a los 2 segundos de montar ──
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSkip(true), 2000);
+    return () => clearTimeout(timer);
   }, []);
 
 
@@ -212,6 +231,29 @@ const IntroScreen = ({ onStart }) => {
         </div>
 
       </div>
+      {/* ── Botón Skip (aparece aos 2s) ────────────────────── */}
+      {showSkip && (
+        <div className="intro-skip-group">
+          <button
+            className="intro-skip-btn"
+            onClick={onStart}
+            id="intro-skip-start-btn"
+            title="Saltar intro e iniciar"
+          >
+            Saltar intro ▶
+          </button>
+          {onSkipToLibrary && (
+            <button
+              className="intro-skip-btn intro-skip-btn--library"
+              onClick={onSkipToLibrary}
+              id="intro-skip-library-btn"
+              title="Ver catálogo de música"
+            >
+              🎵 Ir al catálogo
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

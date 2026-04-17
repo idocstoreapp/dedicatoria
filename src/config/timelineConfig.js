@@ -449,11 +449,7 @@ export const timeline = [
     id: "chat-vitamina-end", start: t("4:00"), type: "chat", from: "j",
     text: "¿conocías Vitamina? 🎵",
     quickReplies: ["Sí, la conozco 🎶", "¡Ahora sí! 😍", "No la conocía"],
-    conditionalReplies: [
-      { match: ["sí", "si", "conozco", "conocía"], response: "sabía que sí 😏" },
-      { match: ["ahora", "ahora sí", "😍"], response: "genial que te haya gustado 🌹" },
-      { match: ["no", "conocía"], response: "bueno, ya la conoces 😌 te la regalo" },
-    ],
+    // La IA (Groq) responde naturalmente según lo que ella conteste
   },
 
   // ══════════════════════════════════════════════════════════

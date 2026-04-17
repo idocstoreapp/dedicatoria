@@ -34,7 +34,10 @@ import {
 
 export default function App() {
   // ─── NAVEGACIÓN ─────────────────────────────────────────
-  const [view,          setView]          = useState('intro');
+  const [view,          setView]          = useState(() => {
+    // Si ya vio la intro antes, ir directo al player (intro puede skippearse)
+    return 'intro';
+  });
   const [selectedTrack, setSelectedTrack] = useState(null);
 
   // ─── REFS ────────────────────────────────────────────────
@@ -66,6 +69,7 @@ export default function App() {
   const [activeTour,          setActiveTour]          = useState(null);
   const [activeSongNotif,     setActiveSongNotif]     = useState(null);
   const [activeMiniGame,      setActiveMiniGame]      = useState(null);
+  const [minigameDone,        setMinigameDone]        = useState(false);
   const [lastChatFromJ,       setLastChatFromJ]       = useState(null);
 
   // ─── LIKES ───────────────────────────────────────────────
@@ -138,7 +142,10 @@ export default function App() {
   const handleSuperlike     = useCallback(s => setIsSuperlike(s), []);
   const handleTour          = useCallback(t => setActiveTour(t), []);
   const handleSongNotif     = useCallback(n => setActiveSongNotif(n), []);
-  const handleMinigame      = useCallback(m => setActiveMiniGame(m), []);
+  const handleMinigame      = useCallback(m => {
+    setActiveMiniGame(m);
+    if (m) setMinigameDone(false); // reset al iniciar nuevo minijuego
+  }, []);
   const handleChatMessage   = useCallback(msg => {
     if (msg.from === 'j') setLastChatFromJ(msg);
   }, []);
@@ -154,6 +161,8 @@ export default function App() {
       return [...prev, withTime];
     });
   }, []);
+
+  const handleMinigameDone = useCallback(() => setMinigameDone(true), []);
 
   // ─── EFFECTS / LIKES / INTERACTIONS ──────────────────────
   const handleEffectDone = useCallback(() => setActiveEffect(null), []);
@@ -253,9 +262,12 @@ export default function App() {
           />
         </div>
 
-        {/* ── CAPA INTRO (SOBRE EL VIDEO DIRECTAMENTE) ───── */}
+        {/* ── CAPA INTRO (SOBRE EL VIDEO DIRECTAMENTE) ─── */}
         {view === 'intro' && (
-          <IntroScreen onStart={handleIntroStart} />
+          <IntroScreen
+            onStart={handleIntroStart}
+            onSkipToLibrary={() => setView('library')}
+          />
         )}
 
         {/* ── CAPA 2: ESCENAS ──────────────────────────── */}
@@ -282,7 +294,7 @@ export default function App() {
         )}
 
         {/* ── ESCENA MINIJUEGO ───────────────── */}
-        <MinigameScene isActive={!!activeMiniGame} />
+        <MinigameScene isActive={!!activeMiniGame && !minigameDone} />
 
         {/* ── CAPA 4: LETRAS — solo cuando empieza la experiencia ── */}
         {hasStarted && (
@@ -310,6 +322,7 @@ export default function App() {
           visible={hasStarted}
           activeMiniGame={activeMiniGame}
           onMinigameMessage={handleMinigameMessage}
+          onMinigameDone={handleMinigameDone}
           onNewMessage={handleChatMessage}
           currentSong={
             currentTime < 178 ? 'Imaginate' :
@@ -357,11 +370,21 @@ export default function App() {
             </button>
           )}
 
-          {/* Resumen de likes al pausar */}
-          {!isPlaying && likeCount > 0 && currentTime > 5 && (
-            <div className="like-summary">
-              ❤️ Le diste <strong>{likeCount}</strong> likes a esta canción. ¡A mí también me gusta!
-            </div>
+          {/* Botón discreta "ir a biblioteca" durante la dedicatoria */}
+          {hasStarted && view === 'player' && (
+            <button
+              className="skip-to-library-btn"
+              onClick={() => {
+                const video = videoRef.current;
+                if (video) { video.pause(); video.currentTime = 0; }
+                setView('library');
+              }}
+              title="Ver catálogo de música"
+              id="skip-to-library-btn"
+              aria-label="Ir a la biblioteca"
+            >
+              🎵
+            </button>
           )}
         </div>
 

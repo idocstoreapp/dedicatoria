@@ -23,7 +23,7 @@ const STICKER_LIST = [
 ];
 
 export default function SimulatedChat({
-  chatEvents = [], currentTime, senderConfig, visible = false, activeMiniGame, onMinigameMessage, currentSong = null, onNewMessage
+  chatEvents = [], currentTime, senderConfig, visible = false, activeMiniGame, onMinigameMessage, onMinigameDone, currentSong = null, onNewMessage
 }) {
   const [messages, setMessages] = useState([]);
   const [userReplies, setUserReplies] = useState({});
@@ -149,29 +149,12 @@ export default function SimulatedChat({
       : { id: freeId, from: 'user', text: clean };
     setMessages(prev => [...prev, newMsg]);
 
-    // ── Para prompts del timeline, usar conditionalReplies primero ──
+    // ── Para prompts del timeline con quickReplies → dejar que handleAIResponse responda (IA) ──
     if (activePrompt && !userReplies[activePrompt.id] && !isSticker) {
       const eventId = activePrompt.id;
-      const replyId = `${eventId}-reply`;
       setUserReplies(prev => ({ ...prev, [eventId]: clean }));
       setActivePrompt(null);
-      setMessages(prev => [...prev, { id: replyId, from: 'user', text: clean }]);
-
-      const lower = clean.toLowerCase();
-      const event = chatEvents.find(e => e.id === eventId);
-      let jReply = null;
-      if (event?.conditionalReplies) {
-        for (const r of event.conditionalReplies) {
-          if (r.match.some(kw => lower.includes(kw.toLowerCase()))) { jReply = r.response; break; }
-        }
-      }
-      if (jReply) {
-        setTimeout(() => {
-          setMessages(prev => [...prev, { id: `${replyId}-j`, from: 'j', text: jReply }]);
-          setMsgReadReceipts(prev => ({ ...prev, [replyId]: true }));
-        }, 1800 + Math.random() * 1200);
-        return;
-      }
+      // NO añadimos el mensaje de nuevo: ya fue añadido arriba (freeId)
     }
 
     // ── Delegar a la función async ──
@@ -379,6 +362,7 @@ export default function SimulatedChat({
           game={activeMiniGame}
           onMessage={addDirectMessage}
           onTyping={setMiniGameTyping}
+          onDone={onMinigameDone}
         />
 
         <div ref={bottomRef} />

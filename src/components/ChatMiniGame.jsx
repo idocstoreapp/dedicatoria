@@ -10,7 +10,7 @@ import { getGeminiResponse } from '../utils/groq-ai.js';
  *  3. Si quedan opciones → J. dice cuántas quedan → opciones VUELVEN A APARECER
  *  4. Si no quedan → mensaje de cierre + done
  */
-export default function ChatMiniGame({ game, onMessage, onTyping }) {
+export default function ChatMiniGame({ game, onMessage, onTyping, onDone }) {
   const [chosen, setChosen] = useState([]);
   const [done, setDone] = useState(false);
   const [introSent, setIntroSent] = useState(false);
@@ -127,6 +127,7 @@ export default function ChatMiniGame({ game, onMessage, onTyping }) {
       onMessage?.({ id: `mg-end-${game.id}`, from: 'j', text: endMsg });
       setDone(true);
       setResponding(false);
+      onDone?.(); // notificar al padre que el minijuego terminó
     }
   }, [chosen, done, responding, game, onMessage, onTyping]);
 
